@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.presentation.screens.HomeScreen
 import com.example.myapplication.presentation.screens.LoginScreen
 import com.example.myapplication.presentation.screens.RegisterScreen
+import com.example.myapplication.presentation.screens.RegisterScreenContent
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable

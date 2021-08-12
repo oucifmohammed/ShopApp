@@ -1,8 +1,8 @@
 package com.example.myapplication.domain.usecases
 
-import android.util.Patterns
 import com.example.myapplication.domain.Repository
-import com.example.myapplication.util.Resource
+import com.example.myapplication.util.EMAIL_ADDRESS_PATTERN
+import com.example.myapplication.util.RegistrationState
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,20 +14,20 @@ class CreateAccount @Inject constructor(private val repository: Repository) {
         username: String,
         password: String,
         confirmPassword: String
-    ): Resource<String> {
+    ): RegistrationState {
 
         if (username.trim().isEmpty() || email.trim().isEmpty() || confirmPassword.trim()
                 .isEmpty() || password.trim().isEmpty()
         ) {
-            return Resource.error("You need to fill all the fields", null)
+            return RegistrationState.Error("You need to fill all the fields")
         }
 
         if (confirmPassword != password) {
-            return Resource.error("check the confirmation of the password", null)
+            return RegistrationState.Error("check the confirmation of the password")
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return Resource.error("There is an error in email field", null)
+        if (!EMAIL_ADDRESS_PATTERN.matcher(email).matches()) {
+            return RegistrationState.Error("There is an error in email field")
         }
 
         return repository.register(email, username, password)

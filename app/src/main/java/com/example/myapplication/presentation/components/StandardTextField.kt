@@ -19,15 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun StandardTextField(
+    text: String,
     hint: String = "",
-    text: MutableState<String>,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    onChange: (String) -> Unit
 ) {
 
     var isHintDisplayed by remember {
@@ -39,10 +39,8 @@ fun StandardTextField(
         modifier = Modifier.padding(top = 8.dp)
     ) {
             BasicTextField(
-                value = text.value,
-                onValueChange = {
-                    text.value = it
-                },
+                value = text,
+                onValueChange = onChange,
                 maxLines = 1,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.body1,
@@ -54,9 +52,7 @@ fun StandardTextField(
                     )
                     .padding(vertical = 20.dp, horizontal = 12.dp)
                     .onFocusChanged {
-                        isHintDisplayed = !it.isFocused and text.value
-                            .trim()
-                            .isEmpty()
+                        isHintDisplayed = !it.isFocused and text.trim().isEmpty()
                     },
 
                 keyboardOptions = KeyboardOptions(keyboardType = keyboardType),

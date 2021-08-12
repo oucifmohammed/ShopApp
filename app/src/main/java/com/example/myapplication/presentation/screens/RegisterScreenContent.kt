@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.screens
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,45 +13,44 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import com.example.myapplication.presentation.components.PasswordTextField
 import com.example.myapplication.presentation.components.StandardTextField
 import com.example.myapplication.presentation.util.Screen
 import com.example.myapplication.presentation.viewmodels.RegisterViewModel
-import com.example.myapplication.util.Resource
+import com.example.myapplication.util.RegistrationState
 
 @Composable
 fun RegisterScreen(
     navController: NavController,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
+    RegisterScreenContent(navController = navController, viewModel = viewModel)
 
-    val email = remember {
-        mutableStateOf("")
-    }
+    observerRegistrationResult(
+        LocalContext.current,
+        viewModel,
+        LocalLifecycleOwner.current,
+        navController
+    )
+}
 
-    val fullName = remember {
-        mutableStateOf("")
-    }
-
-    val password = remember {
-        mutableStateOf("")
-    }
-
-    val confirmPassword = remember {
-        mutableStateOf("")
-    }
+@Composable
+fun RegisterScreenContent(
+    navController: NavController,
+    viewModel: RegisterViewModel
+) {
 
     Surface(
         modifier = Modifier
@@ -71,31 +71,45 @@ fun RegisterScreen(
                     .padding(top = 12.dp)
             )
 
-            StandardTextField(text = fullName, hint = "Full Name")
+            StandardTextField(
+                text = viewModel.fullName.value, hint = "Full Name",
+                onChange = {
+                    viewModel.setFullName(it)
+                },
+            )
 
             StandardTextField(
-                text = email,
+                text = viewModel.email.value,
                 hint = "Email",
-                keyboardType = KeyboardType.Email
+                keyboardType = KeyboardType.Email,
+                onChange = {
+                    viewModel.setEmail(it)
+                }
             )
 
             PasswordTextField(
-                text = password,
+                password = viewModel.password.value,
                 hint = "Password",
+                onChange = {
+                    viewModel.setPassword(it)
+                }
             )
 
             PasswordTextField(
-                text = confirmPassword,
+                password = viewModel.confirmPassword.value,
                 hint = "Confirm Password",
+                onChange = {
+                    viewModel.setConfirmPassword(it)
+                }
             )
 
             Button(
                 onClick = {
                     viewModel.register(
-                        email.value,
-                        fullName.value,
-                        password.value,
-                        confirmPassword.value
+                        viewModel.email.value,
+                        viewModel.fullName.value,
+                        viewModel.password.value,
+                        viewModel.confirmPassword.value
                     )
                 },
                 modifier = Modifier
@@ -128,23 +142,31 @@ fun RegisterScreen(
                 style = MaterialTheme.typography.body1
             )
         }
+    }
+}
 
-        when (viewModel.registrationResult.value?.status) {
-            Resource.Status.SUCCESS -> {
-                viewModel.registrationResult.value?.let {
-                    Toast.makeText(LocalContext.current, "${it.message}", Toast.LENGTH_SHORT).show()
+fun observerRegistrationResult(
+    context: Context,
+    viewModel: RegisterViewModel,
+    lifecycleOwner: LifecycleOwner,
+    navController: NavController
+) {
+    viewModel.registrationResult.observe(lifecycleOwner, { UiState ->
+        when (UiState) {
+            is RegistrationState.Success -> {
+                Toast.makeText(context, UiState.message, Toast.LENGTH_SHORT)
+                    .show()
+                navController.navigate(Screen.HomeScreen.route) {
+                    popUpTo(Screen.LoginScreen.route) { inclusive = true }
                 }
-
-                navController.navigate(Screen.HomeScreen.route)
             }
-            Resource.Status.ERROR -> {
-                viewModel.registrationResult.value?.let {
-                    Toast.makeText(LocalContext.current, "${it.message}", Toast.LENGTH_SHORT).show()
-                }
+            is RegistrationState.Error -> {
+                Toast.makeText(context, UiState.message, Toast.LENGTH_SHORT)
+                    .show()
             }
-            Resource.Status.LOADING -> {
+            is RegistrationState.InProgress -> {
                 //Do nothing.
             }
         }
-    }
+    })
 }

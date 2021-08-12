@@ -1,7 +1,7 @@
 package com.example.myapplication.domain.usecases
 
 import com.example.myapplication.data.FakeRepository
-import com.example.myapplication.util.Resource
+import com.example.myapplication.util.Status
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -12,10 +12,12 @@ import org.junit.Test
 class CreateAccountTest {
 
     private lateinit var createAccountUseCase: CreateAccount
+    private lateinit var fakeRepository: FakeRepository
 
     @Before
     fun setup() {
-        createAccountUseCase = CreateAccount(FakeRepository())
+        fakeRepository = FakeRepository()
+        createAccountUseCase = CreateAccount(fakeRepository)
     }
 
     @Test
@@ -26,7 +28,7 @@ class CreateAccountTest {
             "hello", "hello"
         )
 
-        assertThat(result.status).isEqualTo(Resource.Status.ERROR)
+        assertThat(result.status).isEqualTo(Status.ERROR)
     }
 
     @Test
@@ -36,7 +38,7 @@ class CreateAccountTest {
             "hello", "hello"
         )
 
-        assertThat(result.status).isEqualTo(Resource.Status.ERROR)
+        assertThat(result.status).isEqualTo(Status.ERROR)
     }
 
     @Test
@@ -47,17 +49,33 @@ class CreateAccountTest {
                 "hello", "hello123"
             )
 
-            assertThat(result.status).isEqualTo(Resource.Status.ERROR)
+            assertThat(result.status).isEqualTo(Status.ERROR)
         }
 
     @Test
     fun `create account with bad email format, returns error`() = runBlockingTest {
 
         val result = createAccountUseCase.register(
-            "oucifhello", "Oucif",
-            "hello", "hello123"
+            "crick@.web.com", "Oucif",
+            "hello123", "hello123"
         )
 
-        assertThat(result.status).isEqualTo(Resource.Status.ERROR)
+        assertThat(result.status).isEqualTo(Status.ERROR)
+    }
+
+    @Test
+    fun `create account with email that already exists, returns error`() = runBlockingTest {
+        val result = fakeRepository.register("oucifmohamed8@gmail.com",
+            "oucif mohammed", "hello123")
+
+        assertThat(result.status).isEqualTo(Status.ERROR)
+    }
+
+    @Test
+    fun `create account with email that does not exists, returns success`() = runBlockingTest {
+        val result = fakeRepository.register("oucifmohamed@outlook.fr",
+            "oucif mohammed", "hello123")
+
+        assertThat(result.status).isEqualTo(Status.SUCCESS)
     }
 }

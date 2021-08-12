@@ -2,7 +2,7 @@ package com.example.myapplication.data
 
 import com.example.myapplication.domain.Repository
 import com.example.myapplication.domain.models.User
-import com.example.myapplication.util.Resource
+import com.example.myapplication.util.RegistrationState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +19,7 @@ class RepositoryImpl : Repository {
         email: String,
         username: String,
         password: String
-    ): Resource<String> {
+    ): RegistrationState {
 
         return try {
             withContext(Dispatchers.IO) {
@@ -28,11 +28,22 @@ class RepositoryImpl : Repository {
                 val user = User(id = uid, userName = username, password = password)
                 users.document(uid).set(user).await()
 
-                Resource.success(null,"Registration completed successfully")
+                RegistrationState.Success("Registration completed successfully")
             }
         } catch (e: Exception) {
-            return Resource.error(e.message!!, null)
+            return RegistrationState.Error(e.message!!)
         }
 
+    }
+
+    override suspend fun login(email: String, password: String): RegistrationState {
+        return try {
+            withContext(Dispatchers.IO) {
+                auth.signInWithEmailAndPassword(email, password).await()
+                RegistrationState.Success("login completed successfully")
+            }
+        } catch (e: Exception) {
+            RegistrationState.Error(e.message!!)
+        }
     }
 }

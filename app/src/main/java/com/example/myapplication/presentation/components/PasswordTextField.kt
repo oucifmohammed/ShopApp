@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -28,8 +27,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PasswordTextField(
+    password: String,
     hint: String = "",
-    text: MutableState<String>,
+    onChange: (String) -> Unit,
 ) {
 
     var isHintDisplayed by remember {
@@ -42,10 +42,8 @@ fun PasswordTextField(
         modifier = Modifier.padding(top = 8.dp)
     ) {
         BasicTextField(
-            value = text.value,
-            onValueChange = {
-                text.value = it
-            },
+            value = password,
+            onValueChange = onChange,
             maxLines = 1,
             singleLine = true,
             textStyle = MaterialTheme.typography.body1,
@@ -57,9 +55,7 @@ fun PasswordTextField(
                 )
                 .padding(vertical = 20.dp, horizontal = 12.dp)
                 .onFocusChanged {
-                    isHintDisplayed = !it.isFocused and text.value
-                        .trim()
-                        .isEmpty()
+                    isHintDisplayed = !it.isFocused and password.trim().isEmpty()
                 },
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
