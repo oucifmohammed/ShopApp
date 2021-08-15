@@ -1,18 +1,17 @@
 package com.example.myapplication.di
 
-import android.content.Context
+import com.example.myapplication.data.util.ProductDtoMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object RepositoryModule {
 
-    @Singleton
     @Provides
-    fun provideApplicationContext(@ApplicationContext context: Context) = context
+    @Singleton
+    fun provideUserMapper(): ProductDtoMapper = ProductDtoMapper()
 }

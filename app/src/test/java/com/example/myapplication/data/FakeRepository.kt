@@ -1,8 +1,10 @@
 package com.example.myapplication.data
 
 import com.example.myapplication.domain.Repository
+import com.example.myapplication.domain.models.Product
 import com.example.myapplication.domain.models.User
 import com.example.myapplication.util.RegistrationState
+import com.example.myapplication.util.Resource
 import java.util.*
 
 class FakeRepository : Repository {
@@ -48,7 +50,7 @@ class FakeRepository : Repository {
             return RegistrationState.Error("This account already exists")
         }
 
-        val user = User(id = UUID.randomUUID().toString(), userName = username, password = password)
+        val user = User(id = UUID.randomUUID().toString(), userName = username, password = password,email = "")
         usersList.add(user)
 
         return RegistrationState.Success("Registration completed successfully")
@@ -62,5 +64,9 @@ class FakeRepository : Repository {
 
         return result?.let { RegistrationState.Success("logged in successfully") }
             ?: RegistrationState.Error("You don't have an account yet")
+    }
+
+    override suspend fun searchProductsByName(name: String): Resource<List<Product>> {
+        TODO("Not yet implemented")
     }
 }

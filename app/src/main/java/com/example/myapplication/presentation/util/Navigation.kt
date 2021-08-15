@@ -4,10 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.presentation.screens.HomeScreen
-import com.example.myapplication.presentation.screens.LoginScreen
-import com.example.myapplication.presentation.screens.RegisterScreen
-import com.example.myapplication.presentation.screens.RegisterScreenContent
+import com.example.myapplication.presentation.screens.*
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -28,7 +25,19 @@ fun Navigation() {
         }
 
         composable(route = Screen.HomeScreen.route) {
-            HomeScreen()
+            HomeScreen(navController)
+        }
+
+        composable(route = Screen.FavoritesScreen.route) {
+            FavoritesScreen(navController)
+        }
+
+        composable(route = Screen.CarteScreen.route) {
+            CarteScreen(navController)
+        }
+
+        composable(route = Screen.ProfileScreen.route) {
+            ProfileScreen(navController)
         }
     }
 
