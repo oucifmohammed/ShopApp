@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.usecases.SignIn
-import com.example.myapplication.util.RegistrationState
+import com.example.myapplication.util.ProcessUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,19 +17,21 @@ class SignInViewModel @Inject constructor(
 ): ViewModel(){
 
     val email = mutableStateOf("")
+    val password  = mutableStateOf("")
+    val loading = mutableStateOf(false)
 
-    var password  = mutableStateOf("")
-
-    private val _signInResult = MutableLiveData<RegistrationState>()
-    val signInResult: LiveData<RegistrationState> = _signInResult
+    private val _signInResult = MutableLiveData<ProcessUiState>()
+    val signInResult: LiveData<ProcessUiState> = _signInResult
 
     fun login(email: String, password: String) {
 
         viewModelScope.launch {
-            _signInResult.value = RegistrationState.InProgress()
+
+            loading.value = true
 
             val result = signIn.login(email,password)
 
+            loading.value = false
             _signInResult.value = result
         }
     }

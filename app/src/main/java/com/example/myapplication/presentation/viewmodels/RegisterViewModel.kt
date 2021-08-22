@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.usecases.CreateAccount
-import com.example.myapplication.util.RegistrationState
+import com.example.myapplication.util.ProcessUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,16 +16,14 @@ class RegisterViewModel @Inject constructor(
     private val createAccount: CreateAccount
 ) : ViewModel() {
 
-    var email = mutableStateOf("")
+    val email = mutableStateOf("")
+    val fullName = mutableStateOf("")
+    val password = mutableStateOf("")
+    val confirmPassword = mutableStateOf("")
+    val loading = mutableStateOf(false)
 
-    var fullName = mutableStateOf("")
-
-    var password = mutableStateOf("")
-
-    var confirmPassword = mutableStateOf("")
-
-    private val _registrationResult = MutableLiveData<RegistrationState>()
-    val registrationResult: LiveData<RegistrationState> = _registrationResult
+    private val _registrationResult = MutableLiveData<ProcessUiState>()
+    val registrationResult: LiveData<ProcessUiState> = _registrationResult
 
     fun register(
         email: String,
@@ -36,7 +34,7 @@ class RegisterViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            _registrationResult.value = RegistrationState.InProgress()
+            loading.value = true
 
             val result = createAccount.register(
                 email,
@@ -45,6 +43,7 @@ class RegisterViewModel @Inject constructor(
                 confirmPassword
             )
 
+            loading.value = false
             _registrationResult.value = result
         }
     }

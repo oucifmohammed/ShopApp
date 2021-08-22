@@ -7,18 +7,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
@@ -27,7 +24,9 @@ fun StandardTextField(
     text: String,
     hint: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
-    onChange: (String) -> Unit
+    onChange: (String) -> Unit,
+    imeAction: ImeAction,
+    keyboardActions: KeyboardActions
 ) {
 
     var isHintDisplayed by remember {
@@ -55,7 +54,8 @@ fun StandardTextField(
                         isHintDisplayed = !it.isFocused and text.trim().isEmpty()
                     },
 
-                keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+                keyboardOptions = KeyboardOptions(keyboardType = keyboardType,imeAction = imeAction),
+                keyboardActions = keyboardActions
             )
 
         if (isHintDisplayed) {

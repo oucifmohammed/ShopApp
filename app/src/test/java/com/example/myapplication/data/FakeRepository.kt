@@ -3,7 +3,7 @@ package com.example.myapplication.data
 import com.example.myapplication.domain.Repository
 import com.example.myapplication.domain.models.Product
 import com.example.myapplication.domain.models.User
-import com.example.myapplication.util.RegistrationState
+import com.example.myapplication.util.ProcessUiState
 import com.example.myapplication.util.Resource
 import java.util.*
 
@@ -40,30 +40,30 @@ class FakeRepository : Repository {
         email: String,
         username: String,
         password: String
-    ): RegistrationState {
+    ): ProcessUiState {
 
         val result = usersList.find { user ->
             user.email == email
         }
 
         result?.let {
-            return RegistrationState.Error("This account already exists")
+            return ProcessUiState.Error("This account already exists")
         }
 
         val user = User(id = UUID.randomUUID().toString(), userName = username, password = password,email = "")
         usersList.add(user)
 
-        return RegistrationState.Success("Registration completed successfully")
+        return ProcessUiState.Success("Registration completed successfully")
     }
 
-    override suspend fun login(email: String, password: String): RegistrationState {
+    override suspend fun login(email: String, password: String): ProcessUiState {
 
         val result = usersList.find { user ->
             user.email == email && user.password == password
         }
 
-        return result?.let { RegistrationState.Success("logged in successfully") }
-            ?: RegistrationState.Error("You don't have an account yet")
+        return result?.let { ProcessUiState.Success("logged in successfully") }
+            ?: ProcessUiState.Error("You don't have an account yet")
     }
 
     override suspend fun searchProductsByName(name: String): Resource<List<Product>> {

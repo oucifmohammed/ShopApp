@@ -1,6 +1,7 @@
 package com.example.myapplication.di
 
 import com.example.myapplication.data.util.ProductDtoMapper
+import com.example.myapplication.data.util.UserDtoMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,5 +14,9 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserMapper(): ProductDtoMapper = ProductDtoMapper()
+    fun provideProductMapper(): ProductDtoMapper = ProductDtoMapper()
+
+    @Provides
+    @Singleton
+    fun provideUserMapper(): UserDtoMapper = UserDtoMapper()
 }

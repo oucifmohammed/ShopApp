@@ -5,18 +5,21 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -27,8 +30,9 @@ import com.example.myapplication.presentation.components.PasswordTextField
 import com.example.myapplication.presentation.components.StandardTextField
 import com.example.myapplication.presentation.util.Screen
 import com.example.myapplication.presentation.viewmodels.SignInViewModel
-import com.example.myapplication.util.RegistrationState
+import com.example.myapplication.util.ProcessUiState
 
+@ExperimentalComposeUiApi
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -39,11 +43,15 @@ fun LoginScreen(
     observerLoginResult(LocalContext.current, viewModel, LocalLifecycleOwner.current, navController)
 }
 
+@ExperimentalComposeUiApi
 @Composable
 fun LoginScreenContent(
     navController: NavController,
     viewModel: SignInViewModel
 ) {
+
+    val localFocusManager = LocalFocusManager.current
+    val keyBoardController = LocalSoftwareKeyboardController.current
 
     Surface(
         modifier = Modifier
@@ -71,14 +79,28 @@ fun LoginScreenContent(
                 keyboardType = KeyboardType.Email,
                 onChange = {
                     viewModel.setEmail(it)
-                })
+                },
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        localFocusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
+                imeAction = ImeAction.Next
+            )
 
             PasswordTextField(
                 password = viewModel.password.value,
                 hint = "Password",
                 onChange = {
                     viewModel.setPassword(it)
-                }
+                },
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        localFocusManager.clearFocus()
+                        keyBoardController?.hide()
+                    }
+                ),
+                imeAction = ImeAction.Done
             )
 
             Button(
@@ -116,6 +138,18 @@ fun LoginScreenContent(
             )
 
             Spacer(modifier = Modifier.fillMaxHeight())
+
+            if (viewModel.loading.value) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.primary
+                    )
+                }
+            }
         }
 
     }
@@ -130,19 +164,16 @@ fun observerLoginResult(
 ) {
     viewModel.signInResult.observe(lifecycleOwner, { UiState ->
         when (UiState) {
-            is RegistrationState.Success -> {
+            is ProcessUiState.Success -> {
                 Toast.makeText(context, UiState.message, Toast.LENGTH_SHORT)
                     .show()
                 navController.navigate(Screen.HomeScreen.route) {
                     popUpTo(Screen.LoginScreen.route) { inclusive = true }
                 }
             }
-            is RegistrationState.Error -> {
+            is ProcessUiState.Error -> {
                 Toast.makeText(context, UiState.message, Toast.LENGTH_SHORT)
                     .show()
-            }
-            is RegistrationState.InProgress -> {
-                //Do nothing.
             }
         }
     })
