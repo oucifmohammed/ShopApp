@@ -29,7 +29,7 @@ class SignInViewModel @Inject constructor(
 
             loading.value = true
 
-            val result = signIn.login(email,password)
+            val result = signIn.invoke(email,password)
 
             loading.value = false
             _signInResult.value = result

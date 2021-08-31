@@ -17,7 +17,6 @@ fun BottomBar(navController: NavController) {
 
     val items = listOf(
         Screen.HomeScreen,
-        Screen.FavoritesScreen,
         Screen.CarteScreen,
         Screen.ProfileScreen
     )

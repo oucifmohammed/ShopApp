@@ -10,7 +10,7 @@ class GetUserAccount @Inject constructor(
     val repository: Repository
 ){
 
-    suspend fun getAccount(): User {
+    suspend fun invoke(): User {
         return repository.getUserAccount()
     }
 }

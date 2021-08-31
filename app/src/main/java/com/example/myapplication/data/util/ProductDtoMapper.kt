@@ -18,6 +18,17 @@ class ProductDtoMapper: Mapper<ProductDto,Product>{
         )
     }
 
+    override fun mapFromDomainModel(model: Product): ProductDto {
+        return ProductDto(
+            id = model.id,
+            name = model.name,
+            image = model.image,
+            category = model.category,
+            originalPrice = model.originalPrice,
+            promotionPrice = model.promotionPrice
+        )
+    }
+
     fun toDomainList(initial: List<ProductDto>): List<Product> {
         return initial.map {
             mapToDomainModel(it)

@@ -89,6 +89,9 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha03'
 
+    //Dependency for liveData to work with coroutines
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
+
     //Truth library for testing
     androidTestImplementation "com.google.truth:truth:1.0.1"
     testImplementation "com.google.truth:truth:1.0.1"
@@ -107,4 +110,10 @@ dependencies {
 
     //Library for cropping images
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+
+    implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
+
+    //Map dependencies
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+
 }

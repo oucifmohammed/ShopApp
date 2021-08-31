@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class SignIn @Inject constructor(private val repository: Repository){
 
-    suspend fun login(email: String, password: String): ProcessUiState {
+    suspend fun invoke(email: String, password: String): ProcessUiState {
 
         if(email.trim().isEmpty() || password.trim().isEmpty()) {
             return ProcessUiState.Error("You need to fill all the fields")

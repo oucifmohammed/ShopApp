@@ -2,8 +2,10 @@ package com.example.myapplication.presentation.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.presentation.screens.*
 import com.google.firebase.auth.FirebaseAuth
@@ -30,8 +32,8 @@ fun Navigation() {
             HomeScreen(navController)
         }
 
-        composable(route = Screen.FavoritesScreen.route) {
-            FavoritesScreen(navController)
+        composable(route = Screen.SearchScreen.route) {
+            SearchScreen(navController)
         }
 
         composable(route = Screen.CarteScreen.route) {
@@ -40,6 +42,25 @@ fun Navigation() {
 
         composable(route = Screen.ProfileScreen.route) {
             ProfileScreen(navController)
+        }
+
+        composable(
+            route = "${Screen.ProductDetailsScreen.route}/{productId}",
+            arguments = listOf(
+                navArgument("productId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val productId = it.arguments?.getString("productId")
+
+            productId?.let { productId ->
+                ProductDetailsScreen(productId = productId, navController = navController)
+            }
+        }
+
+        composable(route = Screen.InformationScreen.route) {
+            InformationScreen(navController)
         }
     }
 

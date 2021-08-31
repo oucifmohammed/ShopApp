@@ -14,8 +14,13 @@ class UserDtoMapper : Mapper<UserDto, User> {
             password = model.password,
             photoUrl = model.photoUrl,
             favoriteProducts = model.favoriteProducts,
-            recentProducts = model.recentProducts
+            recentProducts = model.recentProducts,
+            cartProducts = model.cartProducts
         )
+    }
+
+    override fun mapFromDomainModel(model: User): UserDto {
+        TODO("Not yet implemented")
     }
 
 }

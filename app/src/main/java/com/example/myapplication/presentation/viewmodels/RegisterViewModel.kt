@@ -36,7 +36,7 @@ class RegisterViewModel @Inject constructor(
 
             loading.value = true
 
-            val result = createAccount.register(
+            val result = createAccount.invoke(
                 email,
                 username,
                 password,

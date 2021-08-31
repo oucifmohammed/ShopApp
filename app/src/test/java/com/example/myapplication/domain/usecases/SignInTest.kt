@@ -23,21 +23,21 @@ class SignInTest {
     @Test
     fun `sign in with empty email, returns error`() = runBlockingTest {
 
-        val result = signInUseCase.login("", "hello123")
+        val result = signInUseCase.invoke("", "hello123")
 
         assertThat(result.status).isEqualTo(Status.ERROR)
     }
 
     @Test
     fun `sign in with empty password, returns error`() = runBlockingTest {
-        val result = signInUseCase.login("oucifmohamed@gmail.com", "")
+        val result = signInUseCase.invoke("oucifmohamed@gmail.com", "")
 
         assertThat(result.status).isEqualTo(Status.ERROR)
     }
 
     @Test
     fun `sign in with bad email format, returns error`() = runBlockingTest {
-        val result = signInUseCase.login("oucifhello@com","hello")
+        val result = signInUseCase.invoke("oucifhello@com","hello")
 
         assertThat(result.status).isEqualTo(Status.ERROR)
     }
@@ -50,7 +50,7 @@ class SignInTest {
     }
 
     @Test
-    fun `sign in with not existing account, returns false`() = runBlockingTest {
+    fun `sign in with not existing account, returns error`() = runBlockingTest {
         val result = fakeRepository.login("example@gmail.com","hello")
 
         assertThat(result.status).isEqualTo(Status.ERROR)

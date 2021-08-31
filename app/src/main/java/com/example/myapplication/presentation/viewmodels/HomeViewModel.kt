@@ -1,39 +1,58 @@
 package com.example.myapplication.presentation.viewmodels
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.models.Product
-import com.example.myapplication.domain.usecases.SearchForProduct
-import com.example.myapplication.util.Resource
+import com.example.myapplication.domain.usecases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val searchForProduct: SearchForProduct
+    private val getUserFavoriteProducts: GetUserFavoriteProducts,
+    private val addToFavorites: AddToFavorites,
+    private val addToRecentProduct: AddToRecentProduct,
+    private val listenToRecentProductAddition: ListenToRecentProductAddition,
+    private val listenToProductPromotions: ListenToProductPromotions,
+    private val getFavoriteProductsIds: GetFavoriteProductsIds
+
 ) : ViewModel() {
 
-    val searchQuery = mutableStateOf("")
 
-    private val _productList = MutableLiveData<Resource<List<Product>>>()
-    val productList: LiveData<Resource<List<Product>>> = _productList
+    val userFavoriteProducts = liveData(Dispatchers.IO) {
 
-    fun searchProduct(productName: String) {
-        viewModelScope.launch {
-
-            _productList.value = Resource.loading(listOf())
-
-            val result = searchForProduct.search(productName)
-
-            _productList.value = result
+        getUserFavoriteProducts.invoke().collect {
+            emit(it)
         }
     }
 
-    fun setSearchQuery(searchQuery: String) {
-        this.searchQuery.value = searchQuery
+    val userRecentProducts = liveData(Dispatchers.IO) {
+        listenToRecentProductAddition.invoke().collect {
+            emit(it)
+        }
+    }
+
+    val productPromotions = liveData(Dispatchers.IO) {
+        listenToProductPromotions.invoke().collect {
+            emit(it)
+        }
+    }
+
+    val favoriteProductsIds = liveData(Dispatchers.IO) {
+        getFavoriteProductsIds.invoke().collect() {
+            emit(it)
+        }
+    }
+
+    fun toggleLikeButton(product: Product) = viewModelScope.launch{
+        addToFavorites.invoke(product)
+    }
+
+    fun addToRecentList(productId: String) = viewModelScope.launch{
+        addToRecentProduct.invoke(productId)
     }
 }

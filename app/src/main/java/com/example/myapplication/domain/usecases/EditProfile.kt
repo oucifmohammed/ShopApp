@@ -12,7 +12,7 @@ class EditProfile @Inject constructor(
     private val repository: Repository
 ) {
 
-    suspend fun updateProfile(username: String, email: String, uri: Uri?): ProcessUiState {
+    suspend fun invoke(username: String, email: String, uri: Uri?): ProcessUiState {
 
         if (username.trim().isEmpty() || email.trim().isEmpty()) {
             return ProcessUiState.Error("Can't update your profile")

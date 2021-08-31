@@ -11,7 +11,9 @@ sealed class Screen(
     object LoginScreen : Screen("login_screen")
     object RegisterScreen : Screen("register_screen")
     object HomeScreen : Screen("home_screen","Home", R.drawable.home_icon)
-    object FavoritesScreen : Screen("favorites_screen","Favorites",R.drawable.favorites_icon)
+    object SearchScreen : Screen("search_screen","Search")
     object CarteScreen : Screen("carte_screen","Shopping",R.drawable.shopping_icon)
     object ProfileScreen : Screen("profile_screen","Profile",R.drawable.profile_icon)
+    object ProductDetailsScreen : Screen("product_details_screen","ProductDetails")
+    object InformationScreen: Screen("information_screen","Information")
 }

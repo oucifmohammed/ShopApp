@@ -23,7 +23,7 @@ class CreateAccountTest {
     @Test
     fun `create account with empty full name, returns error`() = runBlockingTest {
 
-        val result = createAccountUseCase.register(
+        val result = createAccountUseCase.invoke(
             "email@gmail.com", "",
             "hello", "hello"
         )
@@ -33,7 +33,7 @@ class CreateAccountTest {
 
     @Test
     fun `create account with empty email, returns error`() = runBlockingTest {
-        val result = createAccountUseCase.register(
+        val result = createAccountUseCase.invoke(
             "", "Oucif",
             "hello", "hello"
         )
@@ -44,7 +44,7 @@ class CreateAccountTest {
     @Test
     fun `create account with confirm password different than password, returns error`() =
         runBlockingTest {
-            val result = createAccountUseCase.register(
+            val result = createAccountUseCase.invoke(
                 "oucifmohamed8@gmail.com", "Oucif",
                 "hello", "hello123"
             )
@@ -55,7 +55,7 @@ class CreateAccountTest {
     @Test
     fun `create account with bad email format, returns error`() = runBlockingTest {
 
-        val result = createAccountUseCase.register(
+        val result = createAccountUseCase.invoke(
             "crick@.web.com", "Oucif",
             "hello123", "hello123"
         )

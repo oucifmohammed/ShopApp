@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class CreateAccount @Inject constructor(private val repository: Repository) {
 
-    suspend fun register(
+    suspend fun invoke(
         email: String,
         username: String,
         password: String,

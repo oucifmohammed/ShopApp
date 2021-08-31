@@ -43,7 +43,7 @@ class ProfileViewModel @Inject constructor(
     private fun displayUserdata() = viewModelScope.launch {
 
         val user = withContext(Dispatchers.IO) {
-            getUserAccount.getAccount()
+            getUserAccount.invoke()
         }
 
         setUserName(user.userName)
@@ -70,10 +70,10 @@ class ProfileViewModel @Inject constructor(
         val result =
             if (profilePhoto.value == DEFAULT_USER_IMAGE || previousProfilePhoto == profilePhoto.value) {
                 previousProfilePhoto = profilePhoto.value
-                editProfile.updateProfile(userName.value, email.value, null)
+                editProfile.invoke(userName.value, email.value, null)
             }
             else
-                editProfile.updateProfile(
+                editProfile.invoke(
                     userName.value,
                     email.value,
                     Uri.parse(profilePhoto.value)
@@ -84,6 +84,6 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun logOut() = viewModelScope.launch {
-        logOut.signOut()
+        logOut.invoke()
     }
 }

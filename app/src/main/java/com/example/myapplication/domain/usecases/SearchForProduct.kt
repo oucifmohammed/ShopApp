@@ -10,7 +10,7 @@ import javax.inject.Singleton
 class SearchForProduct @Inject constructor(
     private val repository: Repository
 ) {
-    suspend fun search(searchQuery: String): Resource<List<Product>> {
+    suspend fun invoke(searchQuery: String): Resource<List<Product>> {
 
         if (searchQuery.trim().isEmpty()) {
             return Resource.error(message = "You have to write the search query", data = null)
