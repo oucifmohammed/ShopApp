@@ -15,7 +15,7 @@
         android:theme="@style/Theme.AppSplash">
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBz6ZFnPuqlTXWnYAqxZksINUyuaD9X840"/>
+            android:value="${GMP_KEY}"/>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar" />
