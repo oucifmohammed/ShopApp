@@ -18,20 +18,19 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.myapplication.R
-import com.example.myapplication.domain.models.Product
+import com.example.myapplication.domain.models.CartProduct
 
 @Composable
 fun MyCartProductCard(
-    product: Product,
-    onDeleteButton: (Product) -> Unit
+    product: CartProduct,
+    onDeleteButton: (CartProduct) -> Unit
 ) {
     Card(
-        shape = RoundedCornerShape(13.dp),
+        shape = MaterialTheme.shapes.medium,
         modifier = Modifier
             .background(MaterialTheme.colors.surface)
             .padding(vertical = 6.dp)
-            .fillMaxWidth()
-            .height(88.dp),
+            .fillMaxWidth(),
         elevation = 4.dp
     ) {
         Box(
@@ -45,7 +44,7 @@ fun MyCartProductCard(
                         request = ImageRequest
                             .Builder(LocalContext.current)
                             .placeholder(R.color.grey)
-                            .data(product.image)
+                            .data(product.imageUrl)
                             .build()
                     ),
                     modifier = Modifier
@@ -71,10 +70,14 @@ fun MyCartProductCard(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = if (product.promotionPrice == 0f)
-                            "Price: ${product.originalPrice} DA"
-                        else
-                            "Price: ${product.promotionPrice} DA",
+                        text = "Size: ${product.size}",
+                        style = MaterialTheme.typography.body1
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Text(
+                        text = "Price: ${product.price} DA",
                         style = MaterialTheme.typography.body2,
                         fontWeight = FontWeight.Bold
                     )

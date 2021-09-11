@@ -1,72 +1,39 @@
 package com.example.myapplication.data
 
-import android.net.Uri
 import android.util.Log
-import com.example.myapplication.data.models.ProductDto
-import com.example.myapplication.data.models.UserDto
+import com.example.myapplication.data.models.*
+import com.example.myapplication.data.util.CartProductDtoMapper
 import com.example.myapplication.data.util.ProductDtoMapper
-import com.example.myapplication.data.util.UserDtoMapper
-import com.example.myapplication.domain.Repository
+import com.example.myapplication.domain.ProductRepository
+import com.example.myapplication.domain.models.CartProduct
 import com.example.myapplication.domain.models.Product
-import com.example.myapplication.domain.models.User
-import com.example.myapplication.util.Constants.DEFAULT_USER_IMAGE
+import com.example.myapplication.util.Constants.TOPIC
 import com.example.myapplication.util.ProcessUiState
 import com.example.myapplication.util.Resource
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.google.gson.Gson
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RepositoryImpl @Inject constructor(
+class ProductRepositoryImpl @Inject constructor(
     private val productMapper: ProductDtoMapper,
-    private val userMapper: UserDtoMapper
-) : Repository {
+    private val cartProductDtoMapper: CartProductDtoMapper,
+    private val api: NotificationApi
+) : ProductRepository {
 
     private val auth = FirebaseAuth.getInstance()
     private val users = FirebaseFirestore.getInstance().collection("Users")
     private val products = FirebaseFirestore.getInstance().collection("products")
-    private val storage = FirebaseStorage.getInstance()
-
-    override suspend fun register(
-        email: String,
-        username: String,
-        password: String
-    ): ProcessUiState {
-
-        return try {
-            withContext(Dispatchers.IO) {
-                val result = auth.createUserWithEmailAndPassword(email, password).await()
-                val uid = result.user?.uid!!
-                val user = UserDto(id = uid, userName = username, password = password)
-                users.document(uid).set(user).await()
-
-                ProcessUiState.Success("Registration completed successfully")
-            }
-        } catch (e: Exception) {
-            return ProcessUiState.Error(e.message!!)
-        }
-
-    }
-
-    override suspend fun login(email: String, password: String): ProcessUiState {
-        return try {
-            withContext(Dispatchers.IO) {
-                auth.signInWithEmailAndPassword(email, password).await()
-                ProcessUiState.Success("login completed successfully")
-            }
-        } catch (e: Exception) {
-            ProcessUiState.Error(e.message!!)
-        }
-    }
+    private val userCartProducts =
+        users.document(auth.currentUser?.uid!!).collection("cartProducts")
 
     override suspend fun searchProductsByName(name: String): Resource<List<Product>> {
         return try {
@@ -90,59 +57,6 @@ class RepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Resource.error(message = e.message!!, data = null)
-        }
-    }
-
-    private suspend fun updateProfilePicture(uri: Uri) = withContext(Dispatchers.IO) {
-        val user =
-            users.document(auth.currentUser?.uid!!).get().await().toObject(UserDto::class.java)
-
-        if (user?.photoUrl != DEFAULT_USER_IMAGE) {
-            storage.getReferenceFromUrl(user?.photoUrl!!).delete().await()
-        }
-
-        storage.reference.child("userImages/${user.id}").putFile(uri)
-            .await().metadata?.reference?.downloadUrl?.await()
-    }
-
-    override suspend fun editProfile(username: String, email: String, uri: Uri?): ProcessUiState {
-
-        return try {
-            val userId = auth.currentUser?.uid
-
-            val imageUrl = uri?.let {
-                updateProfilePicture(it).toString()
-            }
-
-            val map = mutableMapOf(
-                "userName" to username,
-                "email" to email
-            )
-
-            imageUrl?.let {
-                map["photoUrl"] = it
-            }
-
-            withContext(Dispatchers.IO) {
-                users.document(userId!!).update(map.toMap()).await()
-            }
-
-            ProcessUiState.Success("Profile updated successfully")
-        } catch (e: Exception) {
-            ProcessUiState.Error(e.message!!)
-        }
-    }
-
-    override suspend fun getUserAccount(): User {
-        val userDto =
-            users.document(auth.currentUser?.uid!!).get().await().toObject(UserDto::class.java)
-
-        return userMapper.mapToDomainModel(userDto!!)
-    }
-
-    override suspend fun logOut() {
-        withContext(Dispatchers.IO) {
-            auth.signOut()
         }
     }
 
@@ -370,6 +284,34 @@ class RepositoryImpl @Inject constructor(
                 }
             }
 
+            val notificationList = mutableListOf<ProductDto>()
+            for (dc in snapshot.documentChanges) {
+                when (dc.type) {
+                    DocumentChange.Type.MODIFIED -> {
+                        if (dc.document["promotion"] == true) {
+                            notificationList.add(dc.document.toObject(ProductDto::class.java))
+                        }
+                    }
+                    DocumentChange.Type.ADDED -> {/* Do nothing*/
+                    }
+                    DocumentChange.Type.REMOVED -> {/* Do nothing*/
+                    }
+                }
+            }
+
+            if (notificationList.size > 0) {
+
+                sendNotification(
+                    PushNotification(
+                        NotificationData(
+                            title = "Promotions",
+                            message = if (notificationList.size > 1) "We have ${notificationList.size} new promotions." else "We have one new promotion"
+                        ),
+                        to = TOPIC
+                    )
+                )
+            }
+
             if (list.isEmpty()) {
                 offer(
                     Resource.error(
@@ -387,21 +329,31 @@ class RepositoryImpl @Inject constructor(
         }
 
         awaitClose { subscription.remove() }
+
     }
 
-    override suspend fun addToCartProducts(productId: String): ProcessUiState =
+    private fun sendNotification(pushNotification: PushNotification) =
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = api.postNotification(pushNotification)
+
+                if (response.isSuccessful) {
+                    Log.d("REPO", "Response: ${Gson().toJson(response)}")
+                } else {
+                    Log.e("REPO", response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                Log.e("REPO", e.toString())
+            }
+        }
+
+    override suspend fun addToCartProducts(cartProduct: CartProduct): ProcessUiState =
         withContext(Dispatchers.IO) {
             try {
 
-                val user = users.document(auth.currentUser?.uid!!)
-                val userCartProducts =
-                    users.document(auth.currentUser?.uid!!).get().await()
-                        .toObject(UserDto::class.java)?.cartProducts ?: listOf()
+                val productDto = cartProductDtoMapper.mapFromDomainModel(cartProduct)
 
-                user.update(
-                    "cartProducts",
-                    userCartProducts + productId
-                ).await()
+                userCartProducts.add(productDto).await()
 
                 ProcessUiState.Success("Product has been added successfully")
 
@@ -410,69 +362,65 @@ class RepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun deleteFromCartProducts(productId: String) = withContext(Dispatchers.IO) {
-        try {
+    override suspend fun deleteFromCartProducts(cartProductId: String) =
+        withContext(Dispatchers.IO) {
+            try {
 
-            val user = users.document(auth.currentUser?.uid!!)
-            val userCartProducts =
-                users.document(auth.currentUser?.uid!!).get().await()
-                    .toObject(UserDto::class.java)?.cartProducts ?: listOf()
+                val querySnapshot = userCartProducts.whereEqualTo("id", cartProductId).get().await()
 
-            user.update(
-                "cartProducts",
-                userCartProducts - productId
-            ).await()
+                val document = querySnapshot.first()
 
-            ProcessUiState.Success("Product has been deleted successfully")
+                document.reference.delete().await()
 
-        } catch (e: Exception) {
-            ProcessUiState.Error(e.message!!)
+                ProcessUiState.Success("Product has been deleted successfully")
+
+            } catch (e: Exception) {
+                ProcessUiState.Error(e.message!!)
+            }
         }
-    }
 
-    override suspend fun listenToCartProducts(): Flow<Resource<List<Product>>> = callbackFlow {
+    override suspend fun listenToCartProducts(): Flow<Resource<List<CartProduct>>> = callbackFlow {
 
         //        try {
-        val user = users.document(auth.currentUser?.uid!!)
 
-        val subscription = user.addSnapshotListener { snapshot, _ ->
+        val subscription = userCartProducts.addSnapshotListener { snapshot, _ ->
 
-            if (snapshot!!.exists()) {
+            if (snapshot!!.isEmpty) {
+                offer(
+                    Resource.error(
+                        "You don't have cart products yet",
+                        data = listOf()
+                    )
+                )
+                return@addSnapshotListener
+            }
 
-                products.get().addOnCompleteListener {
-                    val querySnapshot = it.result
+            val list = mutableListOf<CartProductDto>()
 
-                    users.document(auth.currentUser?.uid!!).get()
-                        .addOnCompleteListener { user ->
+            products.get().addOnCompleteListener { querySnapshot ->
 
-                            val userCartProducts =
-                                user.result!!.toObject(UserDto::class.java)!!.cartProducts
+                val queryResult = querySnapshot.result!!.documents
 
-                            if (userCartProducts.isEmpty()) {
-                                offer(
-                                    Resource.error(
-                                        "You don't have cart products yet",
-                                        data = listOf()
-                                    )
-                                )
+                for (document in snapshot) {
 
-                                return@addOnCompleteListener
-                            }
+                    val cartProduct = document.toObject(CartProductDto::class.java)
 
-                            val finalQuerySnapshot = querySnapshot!!.filter { document ->
-                                document.get("id") in userCartProducts
-                            }
+                    val parentProduct = queryResult.find {
+                        it["id"] == cartProduct.parentProductId
+                    }!!.toObject(ProductDto::class.java)
 
-                            val list = mutableListOf<ProductDto>()
+                    if(parentProduct!!.promotion) {
+                        cartProduct.price = parentProduct.promotionPrice.toDouble()
+                    }else {
+                        cartProduct.price = parentProduct.originalPrice.toDouble()
+                    }
 
-                            for (document in finalQuerySnapshot) {
-                                list.add(document.toObject(ProductDto::class.java))
-                            }
-
-                            offer(Resource.success(productMapper.toDomainList(list)))
-                        }
+                    list.add(cartProduct)
                 }
 
+                val userCartProductsList = cartProductDtoMapper.toDomainList(list)
+
+                offer(Resource.success(userCartProductsList))
             }
 
         }

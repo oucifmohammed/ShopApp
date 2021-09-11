@@ -1,6 +1,6 @@
 package com.example.myapplication.domain.usecases
 
-import com.example.myapplication.data.FakeRepository
+import com.example.myapplication.data.ProductFakeRepository
 import com.example.myapplication.util.Status
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,13 +11,13 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class SearchByCategoryTest {
 
-    lateinit var fakeRepository: FakeRepository
+    lateinit var productFakeRepository: ProductFakeRepository
     lateinit var searchByCategory: SearchByCategory
 
     @Before
     fun setup() {
-        fakeRepository = FakeRepository()
-        searchByCategory = SearchByCategory(fakeRepository)
+        productFakeRepository = ProductFakeRepository()
+        searchByCategory = SearchByCategory(productFakeRepository)
     }
 
     @Test

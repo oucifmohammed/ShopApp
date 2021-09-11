@@ -1,6 +1,6 @@
 package com.example.myapplication.domain.usecases
 
-import com.example.myapplication.domain.Repository
+import com.example.myapplication.domain.ProductRepository
 import com.example.myapplication.domain.models.Product
 import com.example.myapplication.util.Resource
 import javax.inject.Inject
@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SearchForProduct @Inject constructor(
-    private val repository: Repository
+    private val productRepository: ProductRepository
 ) {
     suspend fun invoke(searchQuery: String): Resource<List<Product>> {
 
@@ -16,6 +16,6 @@ class SearchForProduct @Inject constructor(
             return Resource.error(message = "You have to write the search query", data = null)
         }
 
-        return repository.searchProductsByName(searchQuery)
+        return productRepository.searchProductsByName(searchQuery)
     }
 }

@@ -7,4 +7,5 @@ object Constants {
     const val SHOPEMAIL = "shop123@gmail.com"
     const val STARTHOUR = "9:00"
     const val FINISHHOUR = "7:00"
+    const val TOPIC = "/topics/promotions"
 }

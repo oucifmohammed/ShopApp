@@ -13,6 +13,7 @@ class ProductDtoMapper: Mapper<ProductDto,Product>{
             name = model.name,
             image = model.image,
             category = model.category,
+            sizes = model.sizes,
             originalPrice = model.originalPrice,
             promotionPrice = if(model.promotion) model.promotionPrice else 0f
         )
@@ -24,6 +25,7 @@ class ProductDtoMapper: Mapper<ProductDto,Product>{
             name = model.name,
             image = model.image,
             category = model.category,
+            sizes = model.sizes,
             originalPrice = model.originalPrice,
             promotionPrice = model.promotionPrice
         )

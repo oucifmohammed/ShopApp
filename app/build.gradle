@@ -15,6 +15,7 @@ android {
         targetSdk 30
         versionCode 1
         versionName "1.0"
+        buildConfigField("String","SERVER_KEY",SERVER_KEY)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -67,9 +68,12 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     //Firebase
-    implementation 'com.google.firebase:firebase-auth:21.0.1'
-    implementation 'com.google.firebase:firebase-firestore-ktx:23.0.3'
-    implementation 'com.google.firebase:firebase-storage:17.0.0'
+    implementation platform('com.google.firebase:firebase-bom:28.4.0')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+
 
     //Core Splash Screen
     implementation "androidx.core:core-splashscreen:1.0.0-alpha01"
@@ -101,7 +105,10 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
 
     //Testing library for coroutines
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
+
+    //Used for "instantExecutorRule"
+     testImplementation "androidx.arch.core:core-testing:2.1.0"
 
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
@@ -117,4 +124,7 @@ dependencies {
     //Map dependencies
     implementation 'com.google.android.gms:play-services-maps:17.0.1'
 
+    //Retrofit+GSON
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }

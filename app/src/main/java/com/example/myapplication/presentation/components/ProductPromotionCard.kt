@@ -22,6 +22,8 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.myapplication.R
 import com.example.myapplication.domain.models.Product
+import com.example.myapplication.presentation.util.Constants.PROMOTION_CARD_WIDTH
+import com.example.myapplication.presentation.util.Constants.PROMOTION_PRODUCT_IMAGE_HEIGHT
 
 @Composable
 fun ProductPromotionCard(
@@ -32,14 +34,14 @@ fun ProductPromotionCard(
 ) {
 
     Card(
-        shape = RoundedCornerShape(20.dp),
+        shape = MaterialTheme.shapes.large,
         modifier = Modifier
             .background(MaterialTheme.colors.surface)
             .clickable {
                 onSelect(product.id)
             }
             .padding(horizontal = 6.dp)
-            .width(294.dp),
+            .width(PROMOTION_CARD_WIDTH.dp),
         elevation = 4.dp
     ) {
 
@@ -65,16 +67,14 @@ fun ProductPromotionCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RectangleShape)
-                        .height(195.dp),
+                        .height(PROMOTION_PRODUCT_IMAGE_HEIGHT.dp),
                     contentDescription = "",
-//                    contentScale = ContentScale.FillBounds
                 )
 
                 Row(
                     modifier = Modifier
                         .align(Alignment.TopStart)
                 ) {
-//                    Spacer(modifier = Modifier.width(13.dp))
 
                     Box(
                         modifier = Modifier

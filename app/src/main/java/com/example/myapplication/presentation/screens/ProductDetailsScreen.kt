@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
@@ -24,6 +23,8 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.myapplication.R
+import com.example.myapplication.domain.models.CartProduct
+import com.example.myapplication.presentation.components.SizesCard
 import com.example.myapplication.presentation.viewmodels.ProductDetailsViewModel
 import com.example.myapplication.util.ProcessUiState
 import java.util.*
@@ -38,20 +39,21 @@ fun ProductDetailsScreen(
     viewModel.displayProductDetails(productId)
 
     ProductDetailsScreenContent(
-        productId = productId,
         navController = navController,
         viewModel = viewModel
     )
 
-    observerAddToCartResult(LocalContext.current,viewModel, LocalLifecycleOwner.current)
+    observerAddToCartResult(LocalContext.current, viewModel, LocalLifecycleOwner.current)
 }
 
 @Composable
 fun ProductDetailsScreenContent(
-    productId: String,
     navController: NavController,
     viewModel: ProductDetailsViewModel
 ) {
+
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -122,8 +124,7 @@ fun ProductDetailsScreenContent(
                                     Locale.getDefault()
                                 ) else it.toString()
                             },
-                            style = MaterialTheme.typography.h2,
-                            fontWeight = FontWeight.Bold
+                            style = MaterialTheme.typography.h2
                         )
 
                         Spacer(modifier = Modifier.height(11.dp))
@@ -136,6 +137,33 @@ fun ProductDetailsScreenContent(
                                 "Price: ${viewModel.result.value!!.data!!.promotionPrice} DA",
                             style = MaterialTheme.typography.h3
                         )
+
+                        Spacer(modifier = Modifier.height(11.dp))
+
+                        Row {
+                            Text(
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                text = "Sizes:",
+                                style = MaterialTheme.typography.h3
+                            )
+
+                            Spacer(modifier = Modifier.width(14.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+
+                                viewModel.result.value!!.data!!.sizes.map { category ->
+                                    SizesCard(
+                                        category = category,
+                                        isSelected = category == viewModel.selectedCategory.value,
+                                        onSelectedCategoryChanged = {
+                                            viewModel.onSelectedCategoryChanged(it)
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     Button(
@@ -145,7 +173,23 @@ fun ProductDetailsScreenContent(
                             .align(Alignment.BottomCenter)
                             .height(56.dp),
                         onClick = {
-                            viewModel.addToCartProduct(productId)
+
+                            if(viewModel.selectedCategory.value == null) {
+                                Toast.makeText(context, "Please choose a size.", Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
+
+                            viewModel.addToCartProduct(
+                                viewModel.result.value.let {
+                                    CartProduct(
+                                        id = UUID.randomUUID().toString(),
+                                        parentProductId = it!!.data!!.id,
+                                        imageUrl = it.data!!.image,
+                                        name = it.data.name,
+                                        size = viewModel.selectedCategory.value!!
+                                    )
+                                }
+                            )
                         }
                     ) {
                         Text(text = "Add to Cart")

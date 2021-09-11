@@ -6,11 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.domain.models.Order
 import com.example.myapplication.domain.usecases.EditProfile
 import com.example.myapplication.domain.usecases.GetUserAccount
+import com.example.myapplication.domain.usecases.GetUserOrders
 import com.example.myapplication.domain.usecases.LogOut
 import com.example.myapplication.util.Constants.DEFAULT_USER_IMAGE
 import com.example.myapplication.util.ProcessUiState
+import com.example.myapplication.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +24,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val editProfile: EditProfile,
     private val getUserAccount: GetUserAccount,
-    private val logOut: LogOut
+    private val logOut: LogOut,
+    val getUserOrders: GetUserOrders
 ) : ViewModel() {
 
     val userName = mutableStateOf("")
@@ -36,8 +40,12 @@ class ProfileViewModel @Inject constructor(
     private val _updateResult = MutableLiveData<ProcessUiState>()
     val updateResult: LiveData<ProcessUiState> = _updateResult
 
+    private val _getUserOrdersResult = MutableLiveData<Resource<List<Order>>>()
+    val getUserOrdersResult: LiveData<Resource<List<Order>>> = _getUserOrdersResult
+
     init {
         displayUserdata()
+        getUserOrders()
     }
 
     private fun displayUserdata() = viewModelScope.launch {
@@ -81,6 +89,11 @@ class ProfileViewModel @Inject constructor(
 
         loading.value = false
         _updateResult.value = result
+    }
+
+    fun getUserOrders() = viewModelScope.launch {
+        val result = getUserOrders.invoke()
+        _getUserOrdersResult.value = result
     }
 
     fun logOut() = viewModelScope.launch {

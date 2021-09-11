@@ -1,9 +1,8 @@
 package com.example.myapplication.domain.usecases
 
-import com.example.myapplication.data.FakeRepository
+import com.example.myapplication.data.ProductFakeRepository
 import com.example.myapplication.domain.models.Product
 import com.example.myapplication.util.Constants
-import com.example.myapplication.util.Status
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -13,13 +12,13 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class AddToFavoritesTest {
 
-    lateinit var fakeRepository: FakeRepository
+    lateinit var productFakeRepository: ProductFakeRepository
     lateinit var addToFavorites: AddToFavorites
 
     @Before
     fun setup() {
-        fakeRepository = FakeRepository()
-        addToFavorites = AddToFavorites(fakeRepository)
+        productFakeRepository = ProductFakeRepository()
+        addToFavorites = AddToFavorites(productFakeRepository)
     }
 
 
@@ -32,7 +31,8 @@ class AddToFavoritesTest {
             image = Constants.DEFAULT_USER_IMAGE,
             category = "Women",
             originalPrice = 2000f,
-            promotionPrice = 0f
+            promotionPrice = 0f,
+            sizes = listOf("S","L")
         )
 
         val result = addToFavorites.invoke(product)
@@ -49,7 +49,8 @@ class AddToFavoritesTest {
             image = Constants.DEFAULT_USER_IMAGE,
             category = "Women",
             originalPrice = 2000f,
-            promotionPrice = 0f
+            promotionPrice = 0f,
+            sizes = listOf("S","M","L","XL")
         )
 
         val result = addToFavorites.invoke(product)

@@ -1,6 +1,6 @@
 package com.example.myapplication.domain.usecases
 
-import com.example.myapplication.data.FakeRepository
+import com.example.myapplication.data.ProductFakeRepository
 import com.example.myapplication.util.Status
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -12,13 +12,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class SearchProductByNameTest {
 
     private lateinit var searchForProductUseCase: SearchForProduct
-    private lateinit var fakeRepository: FakeRepository
+    private lateinit var productFakeRepository: ProductFakeRepository
 
     @Before
     fun setup() {
 
-        fakeRepository = FakeRepository()
-        searchForProductUseCase = SearchForProduct(fakeRepository)
+        productFakeRepository = ProductFakeRepository()
+        searchForProductUseCase = SearchForProduct(productFakeRepository)
     }
 
     @Test

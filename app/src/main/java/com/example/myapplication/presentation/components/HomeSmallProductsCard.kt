@@ -23,23 +23,23 @@ import com.example.myapplication.R
 import com.example.myapplication.domain.models.Product
 import com.example.myapplication.util.Constants.DEFAULT_USER_IMAGE
 import com.example.myapplication.util.ProductCardType
+import com.example.myapplication.util.ProductCardType.ORDERPRODUCT
 
 @Composable
 fun HomeSmallProductsCard(
+    modifier: Modifier,
     product: Product,
     onSelect: (String) -> Unit,
     onToggleLikeButton: (Product) -> Unit,
     cardType: ProductCardType
 ) {
     Card(
-        shape = RoundedCornerShape(13.dp),
-        modifier = Modifier
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier
             .background(MaterialTheme.colors.surface)
             .clickable {
                 onSelect(product.id)
             }
-            .padding(horizontal = 6.dp)
-            .width(270.dp)
             .height(88.dp),
         elevation = 4.dp
     ) {

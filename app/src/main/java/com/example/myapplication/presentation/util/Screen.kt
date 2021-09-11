@@ -16,4 +16,5 @@ sealed class Screen(
     object ProfileScreen : Screen("profile_screen","Profile",R.drawable.profile_icon)
     object ProductDetailsScreen : Screen("product_details_screen","ProductDetails")
     object InformationScreen: Screen("information_screen","Information")
+    object OrderProductsScreen: Screen("order_products_screen","OrderProducts")
 }

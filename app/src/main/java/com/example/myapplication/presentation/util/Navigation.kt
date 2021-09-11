@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.util
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavType
@@ -10,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.presentation.screens.*
 import com.google.firebase.auth.FirebaseAuth
 
+@ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable
 fun Navigation() {
@@ -54,13 +56,22 @@ fun Navigation() {
         ) {
             val productId = it.arguments?.getString("productId")
 
-            productId?.let { productId ->
-                ProductDetailsScreen(productId = productId, navController = navController)
+            productId?.let { id ->
+                ProductDetailsScreen(productId = id, navController = navController)
             }
         }
 
         composable(route = Screen.InformationScreen.route) {
             InformationScreen(navController)
+        }
+
+        composable(route = "${Screen.OrderProductsScreen.route}/{orderId}") {
+
+            val orderId = it.arguments?.getString("orderId")
+
+            orderId?.let { id ->
+                OrderProductsScreen(id,navController)
+            }
         }
     }
 

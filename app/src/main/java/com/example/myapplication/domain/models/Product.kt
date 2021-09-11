@@ -5,6 +5,7 @@ data class Product(
     val name: String,
     val image: String,
     val category: String,
+    val sizes: List<String>,
     val originalPrice: Float,
     val promotionPrice: Float
 )

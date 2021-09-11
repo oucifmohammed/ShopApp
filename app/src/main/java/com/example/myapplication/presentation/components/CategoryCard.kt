@@ -29,7 +29,7 @@ fun CategoryCard(
                 }
             ),
         elevation = 8.dp,
-        shape = MaterialTheme.shapes.medium,
+        shape = MaterialTheme.shapes.small,
         color = if (isSelected) Color.LightGray else MaterialTheme.colors.primary
     ) {
         Text(

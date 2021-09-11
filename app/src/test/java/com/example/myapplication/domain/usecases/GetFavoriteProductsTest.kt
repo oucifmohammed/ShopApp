@@ -1,6 +1,6 @@
 package com.example.myapplication.domain.usecases
 
-import com.example.myapplication.data.FakeRepository
+import com.example.myapplication.data.ProductFakeRepository
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -12,21 +12,21 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class GetFavoriteProductsTest {
 
-    lateinit var fakeRepository: FakeRepository
+    lateinit var productFakeRepository: ProductFakeRepository
     lateinit var getUserFavoriteProducts: GetUserFavoriteProducts
 
     @Before
     fun setup() {
-        fakeRepository = FakeRepository()
-        getUserFavoriteProducts = GetUserFavoriteProducts(fakeRepository)
+        productFakeRepository = ProductFakeRepository()
+        getUserFavoriteProducts = GetUserFavoriteProducts(productFakeRepository)
     }
 
     @Test
     fun `testing flow`() = runBlockingTest{
-        val result = fakeRepository.getFavoriteProducts()
+        val result = productFakeRepository.getFavoriteProducts()
 
         val list = result.first()
 
-        Truth.assertThat(list.data!![0]).isEqualTo(fakeRepository.productsList[0])
+        Truth.assertThat(list.data!![0]).isEqualTo(productFakeRepository.productsList[0])
     }
 }

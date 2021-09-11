@@ -6,9 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.domain.models.CartProduct
 import com.example.myapplication.domain.models.Product
 import com.example.myapplication.domain.usecases.DisplayProductDetails
-import com.example.myapplication.domain.usecases.ToggleAddButton
+import com.example.myapplication.domain.usecases.AddToCartProducts
 import com.example.myapplication.util.ProcessUiState
 import com.example.myapplication.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +19,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
     private val displayProductDetails: DisplayProductDetails,
-    private val toggleAddButton: ToggleAddButton
+    private val addToCartProducts: AddToCartProducts
 ): ViewModel(){
+
+    val selectedCategory: MutableState<String?> = mutableStateOf(null)
 
     val loading = mutableStateOf(false)
     val result: MutableState<Resource<Product>?> = mutableStateOf(null)
@@ -38,9 +41,13 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
-    fun addToCartProduct(productId: String) = viewModelScope.launch {
-        val result = toggleAddButton.invoke(productId)
+    fun addToCartProduct(cartProduct: CartProduct) = viewModelScope.launch {
+        val result = addToCartProducts.invoke(cartProduct)
 
         _addToCartProductResult.value = result
+    }
+
+    fun onSelectedCategoryChanged(categoryValue: String) {
+        selectedCategory.value = categoryValue
     }
 }

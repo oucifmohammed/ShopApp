@@ -5,6 +5,7 @@ data class ProductDto(
     val name: String = "",
     val image: String = "",
     val category: String = "",
+    val sizes: List<String> = listOf(),
     val originalPrice: Float = 0f,
     val promotion: Boolean = false,
     val promotionPrice: Float = 0f

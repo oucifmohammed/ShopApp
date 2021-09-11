@@ -4,27 +4,23 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.myapplication.R
 import com.example.myapplication.domain.models.Product
+import com.example.myapplication.presentation.util.Constants.SEARCH_PRODUCT_IMAGE_HEIGHT
 
 @Composable
 fun StandardProductCard(
@@ -35,7 +31,7 @@ fun StandardProductCard(
 ) {
 
     Card(
-        shape = RoundedCornerShape(20.dp),
+        shape = MaterialTheme.shapes.large,
         modifier = Modifier
             .background(MaterialTheme.colors.surface)
             .clickable {
@@ -68,7 +64,7 @@ fun StandardProductCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RectangleShape)
-                        .height(225.dp),
+                        .height(SEARCH_PRODUCT_IMAGE_HEIGHT.dp),
                     contentDescription = "",
 //                    contentScale = ContentScale.FillBounds
                 )

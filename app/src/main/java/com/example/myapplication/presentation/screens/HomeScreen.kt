@@ -1,8 +1,6 @@
 package com.example.myapplication.presentation.screens
 
 import android.widget.Toast
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -18,9 +16,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterStart
-import androidx.compose.ui.Alignment.Companion.End
-import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -30,7 +25,6 @@ import com.example.myapplication.domain.models.Product
 import com.example.myapplication.presentation.components.BottomBar
 import com.example.myapplication.presentation.components.HomeSmallProductsCard
 import com.example.myapplication.presentation.components.ProductPromotionCard
-import com.example.myapplication.presentation.components.StandardProductCard
 import com.example.myapplication.presentation.util.Screen
 import com.example.myapplication.presentation.viewmodels.HomeViewModel
 import com.example.myapplication.util.ProductCardType
@@ -42,6 +36,9 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+
+    viewModel.subscribeToPromotionsTopic()
+
     val favoriteProducts: Resource<List<Product>> by viewModel.userFavoriteProducts.observeAsState(
         Resource.loading(null)
     )
@@ -179,12 +176,7 @@ fun HomeScreenContent(
                         .show()
                 }
                 Status.LOADING -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(top = 14.dp)
-                            .align(CenterHorizontally),
-                        color = MaterialTheme.colors.primary
-                    )
+                    Spacer(modifier = Modifier.height(325.dp))
                 }
             }
 
@@ -201,6 +193,7 @@ fun HomeScreenContent(
                     LazyRow(contentPadding = PaddingValues(horizontal = 20.dp, vertical = 15.dp)) {
                         items(items = favoriteProductList.data!!) { product ->
                             HomeSmallProductsCard(
+                                modifier = Modifier.width(270.dp).padding(horizontal = 6.dp),
                                 product = product,
                                 onSelect = {
                                     viewModel.addToRecentList(product.id)
@@ -233,12 +226,7 @@ fun HomeScreenContent(
                 }
 
                 Status.LOADING -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(top = 14.dp)
-                            .align(CenterHorizontally),
-                        color = MaterialTheme.colors.primary
-                    )
+                    Spacer(modifier = Modifier.height(88.dp))
                 }
             }
 
@@ -253,6 +241,7 @@ fun HomeScreenContent(
                     LazyRow(contentPadding = PaddingValues(horizontal = 20.dp, vertical = 15.dp)) {
                         items(items = recentProductList.data!!) { product ->
                             HomeSmallProductsCard(
+                                modifier = Modifier.width(270.dp).padding(horizontal = 6.dp),
                                 product = product,
                                 onSelect = {
                                     navController.navigate("${Screen.ProductDetailsScreen.route}/${product.id}")
@@ -284,12 +273,7 @@ fun HomeScreenContent(
                 }
 
                 Status.LOADING -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(top = 14.dp)
-                            .align(CenterHorizontally),
-                        color = MaterialTheme.colors.primary
-                    )
+                    Spacer(modifier = Modifier.height(88.dp))
                 }
             }
         }

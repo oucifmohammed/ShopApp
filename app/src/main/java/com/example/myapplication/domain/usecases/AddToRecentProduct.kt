@@ -1,15 +1,15 @@
 package com.example.myapplication.domain.usecases
 
-import com.example.myapplication.domain.Repository
+import com.example.myapplication.domain.ProductRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AddToRecentProduct @Inject constructor(
-    val repository: Repository
+    val productRepository: ProductRepository
 ) {
 
     suspend fun invoke(productId: String) {
-        repository.addProductToRecentList(productId)
+        productRepository.addProductToRecentList(productId)
     }
 }

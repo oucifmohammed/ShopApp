@@ -1,6 +1,6 @@
 package com.example.myapplication.domain.usecases
 
-import com.example.myapplication.data.FakeRepository
+import com.example.myapplication.data.UserFakeRepository
 import com.example.myapplication.util.Status
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,12 +12,12 @@ import org.junit.Test
 class SignInTest {
 
     private lateinit var signInUseCase: SignIn
-    private lateinit var fakeRepository: FakeRepository
+    private lateinit var userFakeRepository: UserFakeRepository
 
     @Before
     fun setup() {
-        fakeRepository = FakeRepository()
-        signInUseCase = SignIn(fakeRepository)
+        userFakeRepository = UserFakeRepository()
+        signInUseCase = SignIn(userFakeRepository)
     }
 
     @Test
@@ -44,14 +44,14 @@ class SignInTest {
 
     @Test
     fun `sign in with existing account, returns true`() = runBlockingTest {
-        val result = fakeRepository.login("oucifmohamed8@gmail.com", "hello1234")
+        val result = userFakeRepository.login("oucifmohamed8@gmail.com", "hello1234")
 
         assertThat(result.status).isEqualTo(Status.SUCCESS)
     }
 
     @Test
     fun `sign in with not existing account, returns error`() = runBlockingTest {
-        val result = fakeRepository.login("example@gmail.com","hello")
+        val result = userFakeRepository.login("example@gmail.com","hello")
 
         assertThat(result.status).isEqualTo(Status.ERROR)
     }

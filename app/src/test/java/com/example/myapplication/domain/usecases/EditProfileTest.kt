@@ -1,6 +1,6 @@
 package com.example.myapplication.domain.usecases
 
-import com.example.myapplication.data.FakeRepository
+import com.example.myapplication.data.UserFakeRepository
 import com.example.myapplication.util.Status
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,12 +13,12 @@ import org.junit.Test
 class EditProfileTest {
 
     private lateinit var editProfileUseCase: EditProfile
-    private lateinit var fakeRepository: FakeRepository
+    private lateinit var userFakeRepository: UserFakeRepository
 
     @Before
     fun setup() {
-        fakeRepository = FakeRepository()
-        editProfileUseCase = EditProfile(fakeRepository)
+        userFakeRepository = UserFakeRepository()
+        editProfileUseCase = EditProfile(userFakeRepository)
     }
 
     @Test

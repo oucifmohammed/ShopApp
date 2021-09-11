@@ -1,6 +1,5 @@
 package com.example.myapplication.presentation.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,15 +11,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.myapplication.domain.models.Product
+import com.example.myapplication.presentation.animations.LoadingRecipeListShimmer
 import com.example.myapplication.presentation.components.CategoryCard
 import com.example.myapplication.presentation.components.SearchBar
 import com.example.myapplication.presentation.components.StandardProductCard
+import com.example.myapplication.presentation.util.Constants.SEARCH_PRODUCT_IMAGE_HEIGHT
 import com.example.myapplication.presentation.util.Screen
 import com.example.myapplication.presentation.viewmodels.SearchViewModel
 import com.example.myapplication.util.Resource
@@ -160,9 +160,8 @@ fun SearchScreenContent(
                 Status.LOADING -> {
 
                     productList.data?.let {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center),
-                            color = MaterialTheme.colors.primary
+                        LoadingRecipeListShimmer(
+                            imageHeight = SEARCH_PRODUCT_IMAGE_HEIGHT.dp
                         )
                     }
                 }

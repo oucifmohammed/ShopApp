@@ -1,5 +1,7 @@
 package com.example.myapplication.di
 
+import com.example.myapplication.data.util.CartProductDtoMapper
+import com.example.myapplication.data.util.OrderDtoMapper
 import com.example.myapplication.data.util.ProductDtoMapper
 import com.example.myapplication.data.util.UserDtoMapper
 import dagger.Module
@@ -19,4 +21,12 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideUserMapper(): UserDtoMapper = UserDtoMapper()
+
+    @Provides
+    @Singleton
+    fun provideCartProductMapper(): CartProductDtoMapper = CartProductDtoMapper()
+
+    @Provides
+    @Singleton
+    fun providerOrderMapper(): OrderDtoMapper = OrderDtoMapper()
 }

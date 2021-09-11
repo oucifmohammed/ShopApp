@@ -1,13 +1,13 @@
 package com.example.myapplication.domain.usecases
 
-import com.example.myapplication.domain.Repository
+import com.example.myapplication.domain.UserRepository
 import com.example.myapplication.util.EMAIL_ADDRESS_PATTERN
 import com.example.myapplication.util.ProcessUiState
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CreateAccount @Inject constructor(private val repository: Repository) {
+class CreateAccount @Inject constructor(private val userRepository: UserRepository) {
 
     suspend fun invoke(
         email: String,
@@ -30,6 +30,6 @@ class CreateAccount @Inject constructor(private val repository: Repository) {
             return ProcessUiState.Error("There is an error in email field")
         }
 
-        return repository.register(email, username, password)
+        return userRepository.register(email, username, password)
     }
 }

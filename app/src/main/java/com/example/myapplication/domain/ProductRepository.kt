@@ -1,32 +1,14 @@
 package com.example.myapplication.domain
 
-import android.net.Uri
+import com.example.myapplication.domain.models.CartProduct
 import com.example.myapplication.domain.models.Product
-import com.example.myapplication.domain.models.User
 import com.example.myapplication.util.ProcessUiState
 import com.example.myapplication.util.Resource
 import kotlinx.coroutines.flow.Flow
 
-interface Repository {
-
-    suspend fun register(
-        email: String,
-        username: String,
-        password: String
-    ): ProcessUiState
-
-    suspend fun login(
-        email: String,
-        password: String
-    ): ProcessUiState
+interface ProductRepository {
 
     suspend fun searchProductsByName(name: String): Resource<List<Product>>
-
-    suspend fun editProfile(username: String, email: String, uri: Uri?): ProcessUiState
-
-    suspend fun getUserAccount(): User
-
-    suspend fun logOut()
 
     suspend fun searchProductsByCategory(category: String,name: String?): Resource<List<Product>>
 
@@ -44,9 +26,9 @@ interface Repository {
 
     suspend fun listenToProductPromotions(): Flow<Resource<List<Product>>>
 
-    suspend fun addToCartProducts(productId: String): ProcessUiState
+    suspend fun addToCartProducts(cartProduct: CartProduct): ProcessUiState
 
-    suspend fun deleteFromCartProducts(productId: String): ProcessUiState
+    suspend fun deleteFromCartProducts(cartProductId: String): ProcessUiState
 
-    suspend fun listenToCartProducts(): Flow<Resource<List<Product>>>
+    suspend fun listenToCartProducts(): Flow<Resource<List<CartProduct>>>
 }

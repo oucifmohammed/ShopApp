@@ -55,7 +55,7 @@ fun PasswordTextField(
                 .fillMaxWidth()
                 .border(
                     border = BorderStroke(1.dp, Color(0xFFF5F5F5)),
-                    shape = RoundedCornerShape(20.dp)
+                    shape = MaterialTheme.shapes.large
                 )
                 .padding(vertical = 20.dp, horizontal = 12.dp)
                 .onFocusChanged {

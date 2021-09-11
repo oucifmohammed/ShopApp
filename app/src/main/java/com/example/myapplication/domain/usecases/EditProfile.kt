@@ -1,7 +1,7 @@
 package com.example.myapplication.domain.usecases
 
 import android.net.Uri
-import com.example.myapplication.domain.Repository
+import com.example.myapplication.domain.UserRepository
 import com.example.myapplication.util.EMAIL_ADDRESS_PATTERN
 import com.example.myapplication.util.ProcessUiState
 import javax.inject.Inject
@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class EditProfile @Inject constructor(
-    private val repository: Repository
+    private val userRepository: UserRepository
 ) {
 
     suspend fun invoke(username: String, email: String, uri: Uri?): ProcessUiState {
@@ -22,6 +22,6 @@ class EditProfile @Inject constructor(
             return ProcessUiState.Error("There is an error in email field")
         }
 
-        return repository.editProfile(username, email, uri)
+        return userRepository.editProfile(username, email, uri)
     }
 }

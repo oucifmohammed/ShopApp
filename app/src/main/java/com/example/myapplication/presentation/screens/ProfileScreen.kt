@@ -3,50 +3,46 @@ package com.example.myapplication.presentation.screens
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.myapplication.R
+import com.example.myapplication.domain.models.Order
 import com.example.myapplication.presentation.components.BottomBar
-import com.example.myapplication.presentation.components.StandardTextField
+import com.example.myapplication.presentation.components.ExpandableCard
 import com.example.myapplication.presentation.util.Screen
 import com.example.myapplication.presentation.viewmodels.ProfileViewModel
 import com.example.myapplication.util.CropActivityResultContract
 import com.example.myapplication.util.ProcessUiState
+import com.example.myapplication.util.Resource
 
+@ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable
 fun ProfileScreen(
     navController: NavController,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
-
-
-    ProfileScreenContent(navController = navController, viewModel)
 
     val context = LocalContext.current
     viewModel.updateResult.observe(LocalLifecycleOwner.current, { UiState ->
@@ -62,18 +58,22 @@ fun ProfileScreen(
         }
     })
 
+    val userOrdersResult: Resource<List<Order>> by viewModel.getUserOrdersResult.observeAsState(
+        Resource.loading(null)
+    )
+
+    ProfileScreenContent(navController = navController, viewModel,userOrdersResult = userOrdersResult.data)
 }
 
 
+@ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable
 fun ProfileScreenContent(
     navController: NavController,
     viewModel: ProfileViewModel,
+    userOrdersResult: List<Order>?
 ) {
-
-    val localFocusManager = LocalFocusManager.current
-    val keyBoardController = LocalSoftwareKeyboardController.current
 
     val launcher = rememberLauncherForActivityResult(contract = CropActivityResultContract(1, 1)) {
         viewModel.profilePhoto.value = it.toString()
@@ -93,17 +93,8 @@ fun ProfileScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.Center
+                    .padding(top = 60.dp)
             ) {
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.Top
-                ) {
-
-                }
 
                 Image(
                     painter = rememberImagePainter(
@@ -126,57 +117,17 @@ fun ProfileScreenContent(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                StandardTextField(
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
                     text = viewModel.userName.value,
-                    onChange = {
-                        viewModel.setUserName(it)
-                    },
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            localFocusManager.moveFocus(FocusDirection.Down)
-                        }
-                    ),
-                    imeAction = ImeAction.Next,
+                    style = MaterialTheme.typography.h2,
+                    textAlign = TextAlign.Center,
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-                StandardTextField(
-                    text = viewModel.email.value,
-                    onChange = {
-                        viewModel.setEmail(it)
-                    },
-                    keyboardType = KeyboardType.Email,
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            localFocusManager.clearFocus()
-                            keyBoardController?.hide()
-                        }
-                    ),
-                    imeAction = ImeAction.Done
-                )
-
-                Button(
-                    onClick = {
-                        viewModel.updateProfile()
-                    },
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(top = 8.dp),
-                ) {
-                    Text(text = "Edit", style = MaterialTheme.typography.button)
-                }
-
-                if (viewModel.loading.value) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator(
-                            color = MaterialTheme.colors.primary
-                        )
-                    }
+                userOrdersResult?.let {
+                    ExpandableCard(ordersList = it,navController = navController)
                 }
             }
 
@@ -198,7 +149,6 @@ fun ProfileScreenContent(
                     tint = Color.Red,
                     imageVector = Icons.Filled.Logout,
                     contentDescription = null,
-
                 )
             }
         }

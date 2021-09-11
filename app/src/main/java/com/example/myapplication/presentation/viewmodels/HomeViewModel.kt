@@ -5,7 +5,9 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.models.Product
 import com.example.myapplication.domain.usecases.*
+import com.example.myapplication.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -18,31 +20,32 @@ class HomeViewModel @Inject constructor(
     private val addToRecentProduct: AddToRecentProduct,
     private val listenToRecentProductAddition: ListenToRecentProductAddition,
     private val listenToProductPromotions: ListenToProductPromotions,
-    private val getFavoriteProductsIds: GetFavoriteProductsIds
+    private val getFavoriteProductsIds: GetFavoriteProductsIds,
+    private val subscribeToPromotionsTopic: SubscribeToPromotionsTopic,
+    private val defaultDispatcher: CoroutineDispatcher
 
 ) : ViewModel() {
 
 
-    val userFavoriteProducts = liveData(Dispatchers.IO) {
-
+    val userFavoriteProducts = liveData(defaultDispatcher) {
         getUserFavoriteProducts.invoke().collect {
             emit(it)
         }
     }
 
-    val userRecentProducts = liveData(Dispatchers.IO) {
+    val userRecentProducts = liveData(defaultDispatcher) {
         listenToRecentProductAddition.invoke().collect {
             emit(it)
         }
     }
 
-    val productPromotions = liveData(Dispatchers.IO) {
+    val productPromotions = liveData(defaultDispatcher) {
         listenToProductPromotions.invoke().collect {
             emit(it)
         }
     }
 
-    val favoriteProductsIds = liveData(Dispatchers.IO) {
+    val favoriteProductsIds = liveData(defaultDispatcher) {
         getFavoriteProductsIds.invoke().collect() {
             emit(it)
         }
@@ -54,5 +57,9 @@ class HomeViewModel @Inject constructor(
 
     fun addToRecentList(productId: String) = viewModelScope.launch{
         addToRecentProduct.invoke(productId)
+    }
+
+    fun subscribeToPromotionsTopic() = viewModelScope.launch {
+        subscribeToPromotionsTopic.invoke()
     }
 }
