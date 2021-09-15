@@ -43,7 +43,7 @@ fun PasswordTextField(
     var passwordVisibility by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier.padding(top = 8.dp)
+        modifier = Modifier.padding(top = 16.dp)
     ) {
         BasicTextField(
             value = password,

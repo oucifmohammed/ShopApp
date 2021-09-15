@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -40,7 +39,7 @@ fun ProductPromotionCard(
             .clickable {
                 onSelect(product.id)
             }
-            .padding(horizontal = 6.dp)
+            .padding(horizontal = 16.dp)
             .width(PROMOTION_CARD_WIDTH.dp),
         elevation = 4.dp
     ) {
@@ -79,7 +78,7 @@ fun ProductPromotionCard(
                     Box(
                         modifier = Modifier
                             .height(60.dp)
-                            .width(40.dp)
+                            .width(48.dp)
                             .background(Color(0xFFF5F5F5))
                     ) {
 
@@ -88,6 +87,7 @@ fun ProductPromotionCard(
                                 onToggleLikeButton(product)
                             },
                             modifier = Modifier
+                                .size(48.dp)
                                 .align(Alignment.BottomCenter)
                         ) {
                             Icon(

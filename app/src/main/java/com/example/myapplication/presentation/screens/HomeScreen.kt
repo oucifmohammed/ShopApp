@@ -80,13 +80,13 @@ fun HomeScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = 50.dp)
+                .padding(bottom = 56.dp)
         ) {
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp, start = 20.dp, end = 15.dp),
+                    .padding(top = 24.dp, start = 16.dp, end = 16.dp),
             ) {
                 Text(
                     text = "Welcome",
@@ -100,13 +100,14 @@ fun HomeScreenContent(
                 ) {
 
                     IconButton(
+                        modifier = Modifier.size(48.dp),
                         onClick = {
                             navController.navigate(Screen.SearchScreen.route)
                         }
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(33.dp)
+                                .size(32.dp)
                                 .align(Alignment.CenterVertically),
                             tint = MaterialTheme.colors.primary,
                             imageVector = Icons.Filled.Search,
@@ -114,16 +115,17 @@ fun HomeScreenContent(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
 
                     IconButton(
+                        modifier = Modifier.size(48.dp),
                         onClick = {
                             navController.navigate(Screen.InformationScreen.route)
                         }
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(33.dp)
+                                .size(32.dp)
                                 .align(Alignment.CenterVertically),
                             tint = MaterialTheme.colors.primary,
                             imageVector = Icons.Filled.Info,
@@ -133,17 +135,19 @@ fun HomeScreenContent(
                 }
             }
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                modifier = Modifier.padding(start = 20.dp),
+                modifier = Modifier.padding(start = 16.dp),
                 text = "Promotions",
                 style = MaterialTheme.typography.h2,
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             when (productPromotionsList.status) {
                 Status.SUCCESS -> {
-                    LazyRow(contentPadding = PaddingValues(horizontal = 20.dp, vertical = 15.dp)) {
+                    LazyRow {
                         items(items = productPromotionsList.data!!) { product ->
                             ProductPromotionCard(
                                 product = product,
@@ -163,7 +167,7 @@ fun HomeScreenContent(
                     productPromotionsList.data?.let {
                         Text(
                             modifier = Modifier
-                                .padding(top = 14.dp)
+                                .padding(top = 16.dp)
                                 .align(CenterHorizontally),
                             text = productPromotionsList.message!!,
                             style = MaterialTheme.typography.subtitle1
@@ -180,20 +184,22 @@ fun HomeScreenContent(
                 }
             }
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                modifier = Modifier.padding(start = 20.dp),
+                modifier = Modifier.padding(start = 16.dp),
                 text = "Favorites",
                 style = MaterialTheme.typography.h2,
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             when (favoriteProductList.status) {
                 Status.SUCCESS -> {
-                    LazyRow(contentPadding = PaddingValues(horizontal = 20.dp, vertical = 15.dp)) {
+                    LazyRow {
                         items(items = favoriteProductList.data!!) { product ->
                             HomeSmallProductsCard(
-                                modifier = Modifier.width(270.dp).padding(horizontal = 6.dp),
+                                modifier = Modifier.width(270.dp).padding(horizontal = 16.dp),
                                 product = product,
                                 onSelect = {
                                     viewModel.addToRecentList(product.id)
@@ -212,7 +218,7 @@ fun HomeScreenContent(
                     favoriteProductList.data?.let {
                         Text(
                             modifier = Modifier
-                                .padding(top = 14.dp)
+                                .padding(top = 16.dp)
                                 .align(CenterHorizontally),
                             text = favoriteProductList.message!!,
                             style = MaterialTheme.typography.subtitle1
@@ -230,18 +236,22 @@ fun HomeScreenContent(
                 }
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
             Text(
-                modifier = Modifier.padding(start = 20.dp),
+                modifier = Modifier.padding(start = 16.dp),
                 text = "Recent",
                 style = MaterialTheme.typography.h2,
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             when (recentProductList.status) {
                 Status.SUCCESS -> {
-                    LazyRow(contentPadding = PaddingValues(horizontal = 20.dp, vertical = 15.dp)) {
+                    LazyRow {
                         items(items = recentProductList.data!!) { product ->
                             HomeSmallProductsCard(
-                                modifier = Modifier.width(270.dp).padding(horizontal = 6.dp),
+                                modifier = Modifier.width(270.dp).padding(horizontal = 16.dp),
                                 product = product,
                                 onSelect = {
                                     navController.navigate("${Screen.ProductDetailsScreen.route}/${product.id}")
@@ -259,7 +269,7 @@ fun HomeScreenContent(
                     recentProductList.data?.let {
                         Text(
                             modifier = Modifier
-                                .padding(top = 14.dp)
+                                .padding(top = 16.dp)
                                 .align(CenterHorizontally),
                             text = recentProductList.message!!,
                             style = MaterialTheme.typography.subtitle1

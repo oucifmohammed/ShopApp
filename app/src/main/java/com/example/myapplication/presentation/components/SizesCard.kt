@@ -24,7 +24,7 @@ fun SizesCard(
     Surface(
         modifier = Modifier
             .size(55.dp)
-            .padding(end = 8.dp)
+            .padding(end = 16.dp)
             .toggleable(
                 value = isSelected,
                 onValueChange = {

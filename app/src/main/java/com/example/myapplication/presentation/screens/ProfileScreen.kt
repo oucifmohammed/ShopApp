@@ -3,7 +3,6 @@ package com.example.myapplication.presentation.screens
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -87,13 +86,13 @@ fun ProfileScreenContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
         ) {
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 60.dp)
+                    .padding(top = 40.dp)
             ) {
 
                 Image(
@@ -124,7 +123,7 @@ fun ProfileScreenContent(
                     textAlign = TextAlign.Center,
                 )
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 userOrdersResult?.let {
                     ExpandableCard(ordersList = it,navController = navController)
@@ -141,11 +140,12 @@ fun ProfileScreenContent(
                     }
                 },
                 modifier = Modifier
+                    .size(48.dp)
                     .align(Alignment.TopEnd)
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(35.dp),
+                        .size(24.dp),
                     tint = Color.Red,
                     imageVector = Icons.Filled.Logout,
                     contentDescription = null,

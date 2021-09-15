@@ -29,8 +29,9 @@ fun MyCartProductCard(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
             .background(MaterialTheme.colors.surface)
-            .padding(vertical = 6.dp)
-            .fillMaxWidth(),
+            .padding(vertical = 16.dp)
+            .fillMaxWidth()
+            .height(70.dp),
         elevation = 4.dp
     ) {
         Box(
@@ -48,30 +49,28 @@ fun MyCartProductCard(
                             .build()
                     ),
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
                         .background(Color(0xFFF9FAFF))
-                        .size(57.dp),
+                        .size(40.dp,40.dp),
                     contentDescription = "",
                 )
 
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(start = 10.dp),
+                        .fillMaxHeight(),
                     verticalArrangement = Arrangement.Top
                 ) {
                     Text(
                         text = product.name,
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.h6
                     )
 
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
                         text = "Size: ${product.size}",
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.body2
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
@@ -79,7 +78,7 @@ fun MyCartProductCard(
                     Text(
                         text = "Price: ${product.price} DA",
                         style = MaterialTheme.typography.body2,
-                        fontWeight = FontWeight.Bold
+                        color = Color.Black.copy(alpha = 0.6f)
                     )
                 }
             }
@@ -91,6 +90,7 @@ fun MyCartProductCard(
                 },
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
+                    .size(48.dp,48.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Clear,

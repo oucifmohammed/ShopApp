@@ -11,10 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
@@ -67,60 +64,58 @@ fun InformationScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 16.dp)
         ) {
 
             Row(
-                modifier = Modifier.padding(top = 12.dp),
+                modifier = Modifier.padding(top = 16.dp),
                 horizontalArrangement = Arrangement.Start
             ) {
-//                IconButton(
-//                    onClick = {
-//                        navController.popBackStack()
-//                    },
-//                ) {
-                Icon(
-                    modifier = Modifier
-                        .align(CenterVertically)
-                        .size(35.dp)
-                        .clickable {
-                            navController.popBackStack()
-                        },
-                    tint = MaterialTheme.colors.primary,
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null,
-                )
-                // }
+                IconButton(
+                    modifier = Modifier.size(48.dp).align(Alignment.CenterVertically),
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(32.dp),
+                        tint = MaterialTheme.colors.primary,
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                    )
+                }
 
-                Spacer(modifier = Modifier.width(11.dp))
+                Spacer(modifier = Modifier.width(36.dp))
 
                 Text(
+                    modifier = Modifier.align(CenterVertically),
                     text = "About us",
-                    style = MaterialTheme.typography.h2
+                    style = MaterialTheme.typography.h3
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = "Contact us",
                 style = MaterialTheme.typography.h3
             )
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
 
                 Icon(
                     modifier = Modifier
-                        .size(30.dp)
+                        .size(24.dp)
                         .align(CenterVertically),
                     tint = MaterialTheme.colors.primary,
                     imageVector = Icons.Filled.Call,
                     contentDescription = null,
                 )
 
-                Spacer(modifier = Modifier.width(15.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Text(
                     modifier = Modifier
@@ -145,19 +140,19 @@ fun InformationScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Icon(
                     modifier = Modifier
-                        .size(30.dp)
+                        .size(24.dp)
                         .align(CenterVertically),
                     tint = MaterialTheme.colors.primary,
                     imageVector = Icons.Filled.Email,
                     contentDescription = null,
                 )
 
-                Spacer(modifier = Modifier.width(15.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Text(
                     modifier = Modifier
@@ -167,17 +162,17 @@ fun InformationScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(text = "Follow us", style = MaterialTheme.typography.h3)
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
 
                 Icon(
                     modifier = Modifier
-                        .size(42.dp)
+                        .size(32.dp)
                         .align(CenterVertically),
                     tint = MaterialTheme.colors.primary,
                     imageVector = Icons.Filled.Facebook,
@@ -194,18 +189,18 @@ fun InformationScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(text = "Work Hours", style = MaterialTheme.typography.h3)
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = "$STARTHOUR am - $FINISHHOUR pm",
                 style = MaterialTheme.typography.h4
             )
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             MapView(
                 modifier = Modifier
@@ -216,9 +211,9 @@ fun InformationScreen(
                 onReady = {
                     it.uiSettings.isZoomControlsEnabled = true
 
-                    val shopLocation =  LatLng(35.70383845083055, -0.5613504002574305)
+                    val shopLocation = LatLng(35.70383845083055, -0.5613504002574305)
 
-                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(shopLocation,15f))
+                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(shopLocation, 15f))
                     val markerOptions = MarkerOptions()
                         .title("Waiki Shop")
                         .position(shopLocation)

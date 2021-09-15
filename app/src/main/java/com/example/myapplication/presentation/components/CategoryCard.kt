@@ -1,6 +1,8 @@
 package com.example.myapplication.presentation.components
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -20,7 +22,8 @@ fun CategoryCard(
 
     Surface(
         modifier = Modifier
-            .padding(end = 8.dp)
+            .height(40.dp)
+            .padding(end = 16.dp)
             .toggleable(
                 value = isSelected,
                 onValueChange = {

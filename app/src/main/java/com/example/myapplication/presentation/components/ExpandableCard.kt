@@ -70,7 +70,7 @@ fun ExpandableCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             if (expandedState) {
 
@@ -111,7 +111,7 @@ fun ExpandableCard(
                                 }
                             }
 
-                            Spacer(modifier = Modifier.height(10.dp))
+                            Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
 

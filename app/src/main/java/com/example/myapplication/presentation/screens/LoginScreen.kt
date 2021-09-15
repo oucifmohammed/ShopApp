@@ -61,7 +61,7 @@ fun LoginScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center
         ) {
@@ -70,7 +70,7 @@ fun LoginScreenContent(
                 text = "Login",
                 style = MaterialTheme.typography.h2,
                 modifier = Modifier
-                    .padding(top = 12.dp)
+                    .padding(top = 8.dp)
             )
 
             StandardTextField(
@@ -129,7 +129,7 @@ fun LoginScreenContent(
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 50.dp, bottom = 6.dp)
+                    .padding(top = 48.dp, bottom = 6.dp)
                     .clickable {
                         navController.navigate(Screen.RegisterScreen.route)
                     },

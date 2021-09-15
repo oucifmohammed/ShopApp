@@ -57,13 +57,13 @@ fun SearchScreenContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp)
+                .padding(top = 16.dp, start = 16.dp)
                 .align(Alignment.End)
         ) {
 
             IconButton(
                 modifier = Modifier
-                    .padding(start = 9.dp)
+                    .size(48.dp)
                     .align(Alignment.CenterVertically),
                 onClick = {
                     navController.popBackStack()
@@ -71,23 +71,24 @@ fun SearchScreenContent(
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(35.dp),
+                        .size(32.dp),
                     tint = MaterialTheme.colors.primary,
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = null,
                 )
             }
 
+            Spacer(modifier = Modifier.width(36.dp))
+
             Text(
                 modifier = Modifier
-                    .padding(start = 11.dp)
                     .align(Alignment.CenterVertically),
                 text = "Search",
-                style = MaterialTheme.typography.h2
+                style = MaterialTheme.typography.h3
             )
         }
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         SearchBar(
             text = viewModel.searchQuery.value,
@@ -100,7 +101,7 @@ fun SearchScreenContent(
             }
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         val list = listOf("Women", "Men", "Children")
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -119,7 +120,7 @@ fun SearchScreenContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Box(
             modifier = Modifier
@@ -129,9 +130,7 @@ fun SearchScreenContent(
 
             when (productList.status) {
                 Status.SUCCESS -> {
-                    LazyColumn(
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                    ) {
+                    LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)) {
                         items(items = productList.data!!) { product ->
                             StandardProductCard(
                                 product = product,

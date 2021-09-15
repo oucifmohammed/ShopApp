@@ -37,7 +37,7 @@ fun StandardProductCard(
             .clickable {
                 onSelect(product.id)
             }
-            .padding(vertical = 6.dp)
+            .padding(vertical = 16.dp)
             .fillMaxWidth(),
         elevation = 4.dp
     ) {
@@ -66,19 +66,17 @@ fun StandardProductCard(
                         .clip(RectangleShape)
                         .height(SEARCH_PRODUCT_IMAGE_HEIGHT.dp),
                     contentDescription = "",
-//                    contentScale = ContentScale.FillBounds
                 )
 
                 Row(
                     modifier = Modifier
                         .align(Alignment.TopStart)
                 ) {
-//                    Spacer(modifier = Modifier.width(13.dp))
 
                     Box(
                         modifier = Modifier
                             .height(60.dp)
-                            .width(40.dp)
+                            .width(48.dp)
                             .background(Color(0xFFF5F5F5))
                     ) {
 
@@ -87,6 +85,7 @@ fun StandardProductCard(
                                 onToggleLikeButton(product)
                             },
                             modifier = Modifier
+                                .size(48.dp)
                                 .align(Alignment.BottomCenter)
                         ) {
                             Icon(

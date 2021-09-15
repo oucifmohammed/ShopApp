@@ -65,15 +65,13 @@ fun RegisterScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 24.dp)
                 .verticalScroll(rememberScrollState())
         ) {
 
             Text(
                 text = "Sign up",
                 style = MaterialTheme.typography.h2,
-                modifier = Modifier
-                    .padding(top = 12.dp)
             )
 
             StandardTextField(
@@ -163,7 +161,7 @@ fun RegisterScreenContent(
                     }
                 },
                 modifier = Modifier
-                    .padding(top = 50.dp, bottom = 8.dp)
+                    .padding(top = 48.dp, bottom = 8.dp)
                     .align(Alignment.CenterHorizontally)
                     .clickable {
                         navController.popBackStack()

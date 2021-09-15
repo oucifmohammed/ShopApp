@@ -15,15 +15,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.myapplication.R
 import com.example.myapplication.domain.models.Product
-import com.example.myapplication.util.Constants.DEFAULT_USER_IMAGE
 import com.example.myapplication.util.ProductCardType
-import com.example.myapplication.util.ProductCardType.ORDERPRODUCT
 
 @Composable
 fun HomeSmallProductsCard(
@@ -58,26 +55,24 @@ fun HomeSmallProductsCard(
                             .build()
                     ),
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
                         .background(Color(0xFFF9FAFF))
-                        .size(57.dp),
+                        .size(56.dp),
                     contentDescription = "",
                 )
 
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(start = 10.dp),
+                        .fillMaxHeight(),
                     verticalArrangement = Arrangement.Top
                 ) {
                     Text(
                         text = product.name,
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.h6
                     )
 
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
                         text = if (product.promotionPrice == 0f)
@@ -85,7 +80,7 @@ fun HomeSmallProductsCard(
                         else
                             "Price: ${product.promotionPrice} DA",
                         style = MaterialTheme.typography.body2,
-                        fontWeight = FontWeight.Bold
+                        color = Color.Black.copy(alpha = 0.6f)
                     )
                 }
             }
@@ -96,6 +91,7 @@ fun HomeSmallProductsCard(
                         onToggleLikeButton(product)
                     },
                     modifier = Modifier
+                        .size(48.dp,48.dp)
                         .align(Alignment.CenterEnd)
                 ) {
                     Icon(

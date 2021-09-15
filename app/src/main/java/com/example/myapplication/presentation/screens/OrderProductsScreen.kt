@@ -48,40 +48,41 @@ fun OrderProductsScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 12.dp, end = 9.dp)
+            .padding(top = 16.dp, end = 16.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(
+                modifier = Modifier.size(48.dp),
                 onClick = {
                     navController.popBackStack()
                 },
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(35.dp),
+                        .size(24.dp),
                     tint = MaterialTheme.colors.primary,
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = null,
                 )
             }
 
-            Spacer(modifier = Modifier.width(11.dp))
+            Spacer(modifier = Modifier.width(36.dp))
 
             Text(
                 text = "Products",
-                style = MaterialTheme.typography.h2
+                style = MaterialTheme.typography.h3
             )
         }
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Box(modifier = Modifier.fillMaxSize()) {
             when (products.status) {
                 Status.SUCCESS -> {
-                    LazyColumn(contentPadding = PaddingValues(horizontal = 20.dp, vertical = 15.dp)) {
+                    LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp)) {
                         items(items = products.data!!) { product ->
                             HomeSmallProductsCard(
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                                 product = product,
                                 onSelect = {
                                     //Do nothing

@@ -93,14 +93,15 @@ fun ProductDetailsScreenContent(
 
                     IconButton(
                         modifier = Modifier
-                            .padding(top = 12.dp, start = 9.dp),
+                            .size(48.dp)
+                            .padding(top = 16.dp, start = 16.dp),
                         onClick = {
                             navController.popBackStack()
                         },
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(32.dp)
                                 .align(Alignment.TopStart),
                             tint = MaterialTheme.colors.primary,
                             imageVector = Icons.Filled.ArrowBack,
@@ -116,7 +117,7 @@ fun ProductDetailsScreenContent(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 20.dp, vertical = 20.dp)
+                            .padding(horizontal = 16.dp, vertical = 16.dp)
                     ) {
                         Text(
                             text = viewModel.result.value!!.data!!.name.replaceFirstChar {
@@ -127,7 +128,7 @@ fun ProductDetailsScreenContent(
                             style = MaterialTheme.typography.h2
                         )
 
-                        Spacer(modifier = Modifier.height(11.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
                         Text(
                             text =
@@ -138,7 +139,7 @@ fun ProductDetailsScreenContent(
                             style = MaterialTheme.typography.h3
                         )
 
-                        Spacer(modifier = Modifier.height(11.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
                         Row {
                             Text(
@@ -147,7 +148,7 @@ fun ProductDetailsScreenContent(
                                 style = MaterialTheme.typography.h3
                             )
 
-                            Spacer(modifier = Modifier.width(14.dp))
+                            Spacer(modifier = Modifier.width(16.dp))
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -168,7 +169,7 @@ fun ProductDetailsScreenContent(
 
                     Button(
                         modifier = Modifier
-                            .padding(20.dp)
+                            .padding(16.dp)
                             .fillMaxWidth()
                             .align(Alignment.BottomCenter)
                             .height(56.dp),
