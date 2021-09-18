@@ -1,27 +1,32 @@
 package com.example.myapplication.di
 
-import com.example.myapplication.data.OrderRepositoryImpl
-import com.example.myapplication.data.ProductRepositoryImpl
-import com.example.myapplication.data.UserRepositoryImpl
-import com.example.myapplication.domain.OrderRepository
-import com.example.myapplication.domain.ProductRepository
-import com.example.myapplication.domain.UserRepository
-import dagger.Binds
+import com.example.myapplication.data.util.CartProductDtoMapper
+import com.example.myapplication.data.util.OrderDtoMapper
+import com.example.myapplication.data.util.ProductDtoMapper
+import com.example.myapplication.data.util.UserDtoMapper
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class UseCasesModule {
+object UseCasesModule {
 
+    @Provides
+    @Singleton
+    fun provideProductMapper(): ProductDtoMapper = ProductDtoMapper()
 
-    @Binds
-    abstract fun bindProductRepository(repositoryImpl: ProductRepositoryImpl): ProductRepository
+    @Provides
+    @Singleton
+    fun provideUserMapper(): UserDtoMapper = UserDtoMapper()
 
-    @Binds
-    abstract fun bindUserRepository(repositoryImpl: UserRepositoryImpl): UserRepository
+    @Provides
+    @Singleton
+    fun provideCartProductMapper(): CartProductDtoMapper = CartProductDtoMapper()
 
-    @Binds
-    abstract fun bindOrderRepository(repositoryImpl: OrderRepositoryImpl): OrderRepository
+    @Provides
+    @Singleton
+    fun providerOrderMapper(): OrderDtoMapper = OrderDtoMapper()
 }

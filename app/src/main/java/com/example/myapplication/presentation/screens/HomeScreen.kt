@@ -80,7 +80,7 @@ fun HomeScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = 56.dp)
+                .padding(bottom = 60.dp)
         ) {
 
             Box(

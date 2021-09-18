@@ -31,7 +31,7 @@ fun MyCartProductCard(
             .background(MaterialTheme.colors.surface)
             .padding(vertical = 16.dp)
             .fillMaxWidth()
-            .height(70.dp),
+            .height(105.dp),
         elevation = 4.dp
     ) {
         Box(
